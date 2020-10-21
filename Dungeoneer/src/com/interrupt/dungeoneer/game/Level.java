@@ -40,6 +40,7 @@ import com.interrupt.dungeoneer.tiles.TileMaterials;
 import com.interrupt.helpers.TileEdges;
 import com.interrupt.managers.EntityManager;
 import com.interrupt.managers.TileManager;
+import com.interrupt.utils.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -322,7 +323,7 @@ public class Level {
 		Boolean isValid = false;
 
 		while(isValid == false) {
-			Gdx.app.log("DelverGenerator", "Making level");
+			Logger.log(Logger.TAG_DELVER_GENERATOR, "Making level");
 
 			DungeonGenerator generator;
 			Level generated = null;
@@ -343,12 +344,12 @@ public class Level {
 				isValid = checkIsValidLevel(generated, dungeonLevel);
 			}
 			catch(Exception ex) {
-				Gdx.app.error("DelverGenerator", ex.getMessage());
+				Logger.error(Logger.TAG_DELVER_GENERATOR, ex.getMessage());
 			}
 
 			// Did we make a valid level? Try again if not.
 			if (!isValid || generated == null) {
-				Gdx.app.log("DelverGenerator", "Bad level. Trying again");
+				Logger.log(Logger.TAG_DELVER_GENERATOR, "Bad level. Trying again");
 				continue;
 			}
 
@@ -555,7 +556,7 @@ public class Level {
 			Boolean isValid = false;
 
 			while(isValid == false) {
-				Gdx.app.log("DelverGenerator", "Making level");
+				Logger.log(Logger.TAG_DELVER_GENERATOR, "Making level");
 
                 DungeonGenerator generator;
                 Level generated = null;
@@ -576,12 +577,12 @@ public class Level {
                     isValid = checkIsValidLevel(generated, dungeonLevel);
                 }
                 catch(Exception ex) {
-                    Gdx.app.error("DelverGenerator", ex.getMessage());
+                    Logger.error(Logger.TAG_DELVER_GENERATOR, ex.getMessage());
                 }
 
                 // Did we make a valid level? Try again if not.
                 if (!isValid || generated == null) {
-                    Gdx.app.log("DelverGenerator", "Bad level. Trying again");
+                    Logger.log(Logger.TAG_DELVER_GENERATOR, "Bad level. Trying again");
                     continue;
                 }
 
@@ -668,7 +669,7 @@ public class Level {
 							}
 						}
 						catch(Exception ex) {
-							Gdx.app.error("Delver", "Could not spawn objective item: " + objectivePrefab);
+							Logger.error(Logger.TAG_DELVER, "Could not spawn objective item: " + objectivePrefab);
 						}
 
 						objectivePrefab = null;
@@ -2208,7 +2209,7 @@ public class Level {
 			c.add(getAmbientTileLighting(x, y, z));
 		}
 		catch (Exception ex) {
-			Gdx.app.log("getAmbientTileLighting", ex.getMessage());
+			Logger.log(Logger.TAG_GET_AMBIENT_TILE_LIGHTING, ex.getMessage());
 		}
 
 		Array<Light> lights = lightSpatialHash.getLightsAt(x, y);
@@ -3523,7 +3524,7 @@ public class Level {
 			matches.clear();
 		}
 		catch(Exception ex) {
-			Gdx.app.log("DelverGame", "Error triggering: " + triggersId);
+			Logger.log(Logger.TAG_DELVER_GAME, "Error triggering: " + triggersId);
 		}
 	}
 	
