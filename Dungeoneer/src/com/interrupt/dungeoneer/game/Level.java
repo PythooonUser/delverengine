@@ -320,9 +320,9 @@ public class Level {
 		static_entities = new Array<Entity>();
 
 		// Generate level
-		Boolean isValid = false;
+		boolean isValid = false;
 
-		while(isValid == false) {
+		while(!isValid) {
 			Logger.log(Logger.TAG_DELVER_GENERATOR, "Making level");
 
 			DungeonGenerator generator;
@@ -501,19 +501,21 @@ public class Level {
 		}
 	}
 
+	/** Loads the level. */
 	public void load() {
 		load(Source.LEVEL_START);
 	}
 
-	public void load(Source source) {
+	/** Loads the level using a specific source. */
+	private void load(Source source) {
 		needsSaving = true;
 		isLoaded = true;
 		
 		Random levelRand = new Random();
 		
-		entities = new Array<Entity>();
-		non_collidable_entities = new Array<Entity>();
-		static_entities = new Array<Entity>();
+		entities = new Array<>();
+		non_collidable_entities = new Array<>();
+		static_entities = new Array<>();
 
 		if(!generated) {
 			Level openLevel = null;
@@ -553,9 +555,9 @@ public class Level {
 		}
 		else {
 			// Or generate one!
-			Boolean isValid = false;
+			boolean isValid = false;
 
-			while(isValid == false) {
+			while(!isValid) {
 				Logger.log(Logger.TAG_DELVER_GENERATOR, "Making level");
 
                 DungeonGenerator generator;
@@ -1478,7 +1480,7 @@ public class Level {
 		}
 	}
 
-	private static Boolean checkIsValidLevel(Level tocheck, int dungeonlevel) {
+	private static boolean checkIsValidLevel(Level tocheck, int dungeonlevel) {
 		if(tocheck == null) return false;
 
 		Array<Level> levels = Game.buildLevelLayout();
