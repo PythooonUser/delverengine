@@ -518,40 +518,7 @@ public class Level {
 		static_entities = new Array<>();
 
 		if(!generated) {
-			Level openLevel = null;
-			FileHandle levelFileHandle = Game.findInternalFileInMods(levelFileName);
-					
-			if(levelFileName.endsWith(".dat") || levelFileName.endsWith(".json")) {
-				openLevel = Game.fromJson(Level.class, levelFileHandle);
-			}
-			else {
-				openLevel = KryoSerializer.loadLevel(levelFileHandle);
-			}
-			
-			width = openLevel.width;
-			height = openLevel.height;
-			tiles = openLevel.tiles;
-			tileMaterials = openLevel.tileMaterials;
-
-			editorMarkers = openLevel.editorMarkers;
-			genTheme = DungeonGenerator.GetGenData(theme);
-
-			if(source == Source.EDITOR) {
-				fogColor = openLevel.fogColor;
-				skyLightColor = openLevel.skyLightColor;
-			}
-			
-			for(int i = 0; i < openLevel.entities.size; i++) {
-				Entity copy = openLevel.entities.get(i);
-				if(!copy.checkDetailLevel() || (copy.spawnChance < 1f && Game.rand.nextFloat() > copy.spawnChance)) continue;
-				
-				if(!copy.isDynamic)
-					static_entities.add(copy);
-				else if(!copy.isSolid && !(copy instanceof ButtonDecal))
-					non_collidable_entities.add(copy);
-				else
-					entities.add(copy);
-			}
+			loadFromFile(source);
 		}
 		else {
 			// Or generate one!
@@ -752,7 +719,52 @@ public class Level {
 			GameManager.renderer.makeMapTextureForLevel(this);
 		}
 	}
-	
+
+	/** Loads the level from the specified file. */
+	private void loadFromFile(Source source) {
+		Level level;
+		FileHandle fileHandle = Game.findInternalFileInMods(levelFileName);
+
+		if(levelFileName.endsWith(".dat") || levelFileName.endsWith(".json")) {
+			level = Game.fromJson(Level.class, fileHandle);
+		}
+		else {
+			level = KryoSerializer.loadLevel(fileHandle);
+		}
+
+		width = level.width;
+		height = level.height;
+		tiles = level.tiles;
+		tileMaterials = level.tileMaterials;
+
+		editorMarkers = level.editorMarkers;
+		genTheme = DungeonGenerator.GetGenData(theme);
+
+		if(source == Source.EDITOR) {
+			fogColor = level.fogColor;
+			skyLightColor = level.skyLightColor;
+		}
+		
+		if (level.entities != null && level.entities.size > 0) {
+			addEntities(level.entities);
+		}
+	}
+
+	/** Adds entities to the corresponding entity arrays based on their spawn chances. */
+	private void addEntities(Array<Entity> entities) {
+		for(int i = 0; i < entities.size; i++) {
+			Entity entity = entities.get(i);
+			if(!entity.checkDetailLevel() || (entity.spawnChance < 1f && Game.rand.nextFloat() > entity.spawnChance)) continue;
+			
+			if(!entity.isDynamic)
+				static_entities.add(entity);
+			else if(!entity.isSolid && !(entity instanceof ButtonDecal))
+				non_collidable_entities.add(entity);
+			else
+				entities.add(entity);
+		}
+	}
+
 	private boolean adjacentToOpenSpace(int x, int y) {
 		Tile e = getTileOrNull(x - 1, y);
 		if(e != null && e.IsFree()) return true;
