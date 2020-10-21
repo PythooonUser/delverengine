@@ -78,8 +78,6 @@ public class Level {
 	
 	protected transient Array<Entity> toDelete = new Array<Entity>();
 
-	private transient short[] smellMap = null;
-	
 	public Integer playerStartX, playerStartY, playerStartRot = null;
 	
 	public Stairs up;
@@ -224,13 +222,12 @@ public class Level {
 
 	public HashMap<String, String> textureAtlasOverrides = null;
 	public HashMap<String, String> spriteAtlasOverrides = null;
-	
-	public Level()
-	{
-	}
-	
+
+	/** Create a blank level for the editor. */
+	public Level() { }
+
+	/** Create a blank level for the editor. */
 	public Level(int width, int height) {
-		// make a blank level for the editor
 		this.width = width;
 		this.height = height;
 		
@@ -244,32 +241,7 @@ public class Level {
 		isLoaded=true;
 		init(Source.LEVEL_START);
 	}
-	
-	public Level(int dungeonLevel, DungeonTheme theme, String levelFileName, String levelHeightFile, float darkness, Game game, float fogStart, float fogEnd) {
-		this.levelName = levelFileName;
-		this.darkness = darkness;
-		this.fogStart = fogStart;
-		this.fogEnd = fogEnd;
-		this.dungeonLevel = dungeonLevel;
-		this.theme = theme.toString();
-		this.levelFileName = levelFileName;
-		this.levelHeightFile = levelHeightFile;
-		isLoaded = false;
-		needsSaving = true;
-	}
-	
-	public Level(int dungeonLevel, DungeonTheme theme, float darkness, Game game, float fogStart, float fogEnd) {
-		this.levelName = "GEN";
-		this.darkness = darkness;
-		this.fogStart = fogStart;
-		this.fogEnd = fogEnd;
-		this.dungeonLevel = dungeonLevel;
-		this.theme = theme.toString();
-		this.generated = true;
-		isLoaded = false;
-		needsSaving = true;
-	}
-	
+
 	public void loadForEditor(String levelFileName, String levelHeightFile) {
 		this.levelName = "EDITED";
 		this.levelFileName = levelFileName;
