@@ -5,7 +5,6 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.interrupt.dungeoneer.Audio;
 import com.interrupt.dungeoneer.annotations.EditorProperty;
@@ -15,17 +14,17 @@ import com.interrupt.dungeoneer.game.CachePools;
 import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.dungeoneer.game.Level;
 import com.interrupt.dungeoneer.game.Level.Source;
-import com.interrupt.dungeoneer.gfx.GlRenderer;
 import com.interrupt.dungeoneer.gfx.drawables.DrawableMesh;
 import com.interrupt.dungeoneer.gfx.drawables.DrawableSprite;
 import com.interrupt.dungeoneer.tiles.Tile;
 import com.interrupt.managers.StringManager;
 
 public class Door extends Entity {
-	public enum DoorState {CLOSED, OPENING, OPEN, CLOSING, STUCK};
-    public enum DoorOpenType {SLIDE, SLIDE_UP, ROTATE, ROTATE_UP};
-    public enum DoorDirection {NORTH, SOUTH, EAST, WEST};
-    public enum DoorType {NORMAL, TRAPDOOR};
+	public enum DoorState { CLOSED, OPENING, OPEN, CLOSING, STUCK }
+    public enum DoorOpenType { SLIDE, SLIDE_UP, ROTATE, ROTATE_UP }
+    public enum DoorDirection { NORTH, SOUTH, EAST, WEST }
+	public enum DoorType { NORMAL, TRAPDOOR }
+	public enum DoorTriggerMode { OPEN_CLOSE, LOCK_UNLOCK }
 
     /** Door mesh filepath. */
     @EditorProperty(type = "FILE_PICKER", params = "meshes")
@@ -120,8 +119,6 @@ public class Door extends Entity {
 	@EditorProperty
 	public String breakSound = null;
 
-	public enum DoorTriggerMode {OPEN_CLOSE, LOCK_UNLOCK};
-
 	/** Which action triggers door event. */
 	@EditorProperty
 	public DoorTriggerMode triggerMode = DoorTriggerMode.OPEN_CLOSE;
@@ -145,10 +142,17 @@ public class Door extends Entity {
 	
 	public Vector3 dir = new Vector3(Vector3.Z);
 	
-	public Door() { artType = ArtType.texture; isSolid = true; this.dir = Vector3.Z; this.isActive = true; stepHeight = 0f; isDynamic = true; }
-
 	public Vector3 tempDir = new Vector3();
 	public Vector3 offset = new Vector3();
+	
+	public Door() {
+		artType = ArtType.texture;
+		isSolid = true;
+		this.dir = Vector3.Z;
+		this.isActive = true;
+		stepHeight = 0f;
+		isDynamic = true;
+	}
 
 	public Door(float x, float y, int tex)
 	{
@@ -513,94 +517,110 @@ public class Door extends Entity {
 	
 	@Override
 	public void updateDrawable() {
-		// init the drawable
-		DrawableMesh doorDrawable = null;
-		if(drawable == null || !(drawable instanceof DrawableMesh) || lastMeshFile != doorMesh ) {
-			doorDrawable = new DrawableMesh(doorMesh, doorTexture);
-			drawable = doorDrawable;
-            lastMeshFile = doorMesh;
-		}
+		initDrawable();
+		setDrawableOffset(doorDirection);
+		setDrawableRotation(doorDirection, doorType);
+		drawable.update(this);
+
+		// FIXME: Is this still needed? Or does `tickAttached` already do the trick?
+		rotateAttachments();
+	}
+
+	/** Creates a new drawable in case we don't have one. */
+	private void initDrawable() {
+		if(drawable instanceof DrawableMesh && lastMeshFile != doorMesh ) { return; }
+
+		drawable = new DrawableMesh(doorMesh, doorTexture);
+		lastMeshFile = doorMesh;
+	}
+	
+	/** Adjusts the door mesh origin to be always at the center of the tile. */
+	private void setDrawableOffset(DoorDirection direction) {
+		Vector3 drawOffset = new Vector3(0f, 0f, 0f);
 		
-		if(drawable != null) {  
-			doorDrawable = (DrawableMesh) drawable;
-			drawable.update(this);
-			
-			doorDrawable.x = x;
-			doorDrawable.y = y;
-			doorDrawable.z = z;
+		if(direction == DoorDirection.EAST) {
+			drawOffset.set(0.5f, 0f, 0f);
 		}
-		
-		// setup draw offset
-		if(doorDirection == DoorDirection.EAST) {
-			drawable.drawOffset.x = 0.5f;
-			drawable.drawOffset.y = 0;
+		else if(direction == DoorDirection.WEST) {
+			drawOffset.set(-0.5f, 0f, 0f);
 		}
-		else if(doorDirection == DoorDirection.WEST) {
-			drawable.drawOffset.x = -0.5f;
-			drawable.drawOffset.y = 0;
+		else if(direction == DoorDirection.NORTH) {
+			drawOffset.set(0f, -0.5f, 0f);
 		}
-		else if(doorDirection == DoorDirection.NORTH) {
-			drawable.drawOffset.x = 0;
-			drawable.drawOffset.y = -0.5f;
-		}
-		else if(doorDirection == DoorDirection.SOUTH) {
-			drawable.drawOffset.x = 0;
-			drawable.drawOffset.y = 0.5f;
-		}
-		
-		// trapdoors face up
-		drawable.dir.set(Vector3.X).scl(-1f);
-		if(doorType == DoorType.TRAPDOOR) {
-			drawable.dir.rotate(Vector3.Z, -90f);
-			yOffset = -0.5f;
-		}
-		else {
-			yOffset = 0;
-		}
-		
-		// set the rotation based on the door direction
-		if(doorDirection == DoorDirection.EAST) {
-			drawable.dir.rotate(Vector3.Y, 90f);
-		}
-		else if(doorDirection == DoorDirection.SOUTH) {
-			drawable.dir.rotate(Vector3.Y, 0f);
-		}
-		else if(doorDirection == DoorDirection.NORTH) {
-			drawable.dir.rotate(Vector3.Y, 180f);
-		}
-		else if(doorDirection == DoorDirection.WEST) {
-			drawable.dir.rotate(Vector3.Y, 270f);
-		}
-		
-		if(rot != 0) {
-			if(doorType == DoorType.NORMAL)
-				drawable.dir.rotate(Vector3.Y, -rot);
-			else if(doorType == DoorType.TRAPDOOR)
-				drawable.dir.rotate(Vector3.X, -rot);
+		else if(direction == DoorDirection.SOUTH) {
+			drawOffset.set(0f, 0.5f, 0f);
 		}
 
+		drawable.drawOffset = drawOffset;
+	}
+
+	/** Applies any rotation to the mesh depending on the door's direction and any running animations. */
+	private void setDrawableRotation(DoorDirection direction, DoorType type) {
+		// Set default direction.
+		drawable.dir.set(Vector3.X).scl(-1f);
+		
+		// Rotate according to door direction.
+		if(direction == DoorDirection.EAST) {
+			drawable.dir.rotate(Vector3.Y, 90f);
+		}
+		else if(direction == DoorDirection.SOUTH) {
+			drawable.dir.rotate(Vector3.Y, 0f);
+		}
+		else if(direction == DoorDirection.NORTH) {
+			drawable.dir.rotate(Vector3.Y, 180f);
+		}
+		else if(direction == DoorDirection.WEST) {
+			drawable.dir.rotate(Vector3.Y, 270f);
+		}
+
+		// Rotate for trap door orientation.
+		if(type == DoorType.TRAPDOOR) {
+			drawable.dir.rotate(Vector3.Z, -90f);
+		}
+
+		// Set extra rotation (for open/close animation).
+		animateOpenClose(type);
+
+		// Set extra rotation (for shake animation).
+		animateShake(direction);
+	}
+
+	/** Performs an open/close animation on the drawable. */
+	private void animateOpenClose(DoorType type) {
+		if(rot != 0) {
+			if(type == DoorType.NORMAL)
+				drawable.dir.rotate(Vector3.Y, -rot);
+			else if(type == DoorType.TRAPDOOR)
+				drawable.dir.rotate(Vector3.X, -rot);
+		}
+	}
+
+	/** Performs a shake animation on the drawable. */
+	private void animateShake(DoorDirection direction) {
 		if(shakeTimer > 0) {
-			if(doorDirection == DoorDirection.SOUTH || doorDirection == DoorDirection.NORTH)
+			if(direction == DoorDirection.SOUTH || direction == DoorDirection.NORTH)
 				drawable.dir.z += ((float)Math.sin(Game.instance.time * 0.5f) * shakeTimer * (shakeAmount * 0.005f)) * 0.05f;
 			else
 				drawable.dir.x += ((float)Math.sin(Game.instance.time * 0.5f) * shakeTimer * (shakeAmount * 0.005f)) * 0.05f;
 		}
+	}
 
-		// attachments should rotate with the door!
+	private void rotateAttachments() {
 		if(attachmentTransform == null) {
 			attachmentTransform = new Vector3(x, y , z);
-			tempDir.set(drawable.dir.z, drawable.dir.x, drawable.dir.y).scl(-0.5f);
 		}
-		if(attachmentTransform != null) {
-			offset.set(drawable.dir.z, drawable.dir.x, drawable.dir.y).scl(-0.5f);
-			tempDir.sub(offset);
+		
+		tempDir.set(drawable.dir.z, drawable.dir.x, drawable.dir.y).scl(-0.5f);
+		offset.set(tempDir);
+		// FIXME: `tempDir` is ALWAYS zero, due to above assignment.
+		tempDir.sub(offset);
 
-			attachmentTransform.set(tempDir).add(x, y, z);
-
-			tempDir.set(offset);
-		}
+		// FIXME: So `attachmentTransform` is always equal the entity's transform.
+		attachmentTransform.set(tempDir).add(x, y, z);
+		// FIXME: `tempDir` is no longer used here.
+		tempDir.set(offset);
 	}
-	
+
 	@Override
 	public void rotate90() {
 		if(doorDirection == DoorDirection.NORTH) {
