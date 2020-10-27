@@ -534,7 +534,7 @@ public class Door extends Entity {
 		lastMeshFile = doorMesh;
 	}
 	
-	/** Adjusts the door mesh origin to be always at the center of the tile. */
+	/** Adjusts the door mesh origin to be always at the bottom. */
 	private void setDrawableOffset(DoorDirection direction) {
 		Vector3 drawOffset = new Vector3(0f, 0f, 0f);
 		
@@ -558,24 +558,22 @@ public class Door extends Entity {
 	private void setDrawableRotation(DoorDirection direction, DoorType type) {
 		// Set default direction.
 		drawable.dir.set(Vector3.X).scl(-1f);
-		
-		// Rotate according to door direction.
-		if(direction == DoorDirection.EAST) {
-			drawable.dir.rotate(Vector3.Y, 90f);
+
+		if (type == DoorType.TRAPDOOR) {
+			drawable.dir.rotate(Vector3.Z, 90f);
 		}
-		else if(direction == DoorDirection.SOUTH) {
+		
+		if(direction == DoorDirection.SOUTH) {
 			drawable.dir.rotate(Vector3.Y, 0f);
+		}
+		else if(direction == DoorDirection.EAST) {
+			drawable.dir.rotate(Vector3.Y, 90f);
 		}
 		else if(direction == DoorDirection.NORTH) {
 			drawable.dir.rotate(Vector3.Y, 180f);
 		}
 		else if(direction == DoorDirection.WEST) {
 			drawable.dir.rotate(Vector3.Y, 270f);
-		}
-
-		// Rotate for trap door orientation.
-		if(type == DoorType.TRAPDOOR) {
-			drawable.dir.rotate(Vector3.Z, -90f);
 		}
 
 		// Set extra rotation (for open/close animation).
