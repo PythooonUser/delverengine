@@ -1,9 +1,9 @@
 package com.interrupt.dungeoneer.overlays;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -20,10 +20,10 @@ import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.interrupt.dungeoneer.Audio;
-import com.interrupt.dungeoneer.GameManager;
 import com.interrupt.dungeoneer.game.Colors;
 import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.dungeoneer.game.Options;
+import com.interrupt.dungeoneer.GameManager;
 import com.interrupt.dungeoneer.input.Actions;
 import com.interrupt.dungeoneer.input.ControllerState;
 import com.interrupt.dungeoneer.input.ControllerState.DPAD;
