@@ -353,5 +353,5 @@ public abstract class WindowOverlay extends Overlay {
 	}
 
 	/** Implement this method in order to create a table for the overlay content. */
-	public abstract Table makeContent();
+	protected abstract Table makeContent();
 }

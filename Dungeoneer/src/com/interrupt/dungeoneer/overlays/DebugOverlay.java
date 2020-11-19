@@ -22,13 +22,20 @@ import com.interrupt.managers.ItemManager;
 
 import java.util.HashMap;
 
+/** Class representing a debug overlay that lets the player spawn arbitrary items, alter state etc. */
 public class DebugOverlay extends WindowOverlay {
 	final Player player;
 	protected TextButton doneBtn;
 	protected final Color selectedValue = new Color(0.6f, 1f, 0.6f, 1f);
 	protected final Color unselectedValue = new Color(0.6f, 0.6f, 0.6f, 1f);
 
+	/**
+	 * Constructs a new <code>DebugOverlay</code>.
+	 * @param player The current player.
+	 */
 	public DebugOverlay(Player player) {
+		super();
+
 		this.player = player;
 	}
 
@@ -481,7 +488,6 @@ public class DebugOverlay extends WindowOverlay {
 
 	@Override
 	public Table makeContent() {
-
 		buttonOrder.clear();
 
 		final Overlay thisOverlay = this;
