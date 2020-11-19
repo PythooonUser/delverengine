@@ -23,7 +23,6 @@ import com.interrupt.managers.ItemManager;
 import java.util.HashMap;
 
 public class DebugOverlay extends WindowOverlay {
-
 	final Player player;
 	protected TextButton doneBtn;
 	protected final Color selectedValue = new Color(0.6f, 1f, 0.6f, 1f);
@@ -31,16 +30,6 @@ public class DebugOverlay extends WindowOverlay {
 
 	public DebugOverlay(Player player) {
 		this.player = player;
-	}
-
-	@Override
-	public void onShow() {
-		super.onShow();
-	}
-
-	@Override
-	public void onHide() {
-		super.onHide();
 	}
 
 	protected void addItem(Table table, final String text, final HashMap<String, Array<Monster>> value) {

@@ -227,7 +227,7 @@ public abstract class WindowOverlay extends Overlay {
 	}
 
 	@Override
-	public void onShow() {
+	protected void onShow() {
 		skin = UiSkin.getSkin();
 
         int width = Gdx.graphics.getWidth();
@@ -256,6 +256,11 @@ public abstract class WindowOverlay extends Overlay {
 			Gdx.input.setInputProcessor(ui);
 
 		controllerState = Game.gamepadManager.controllerState;
+	}
+
+	@Override
+	protected void onHide() {
+		// Nothing to do here.
 	}
 	
 	protected void makeLayout() {

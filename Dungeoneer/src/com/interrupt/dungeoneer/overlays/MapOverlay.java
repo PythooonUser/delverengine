@@ -1,11 +1,10 @@
 package com.interrupt.dungeoneer.overlays;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,22 +12,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-//import com.esotericsoftware.tablelayout.Cell;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.interrupt.dungeoneer.GameManager;
 import com.interrupt.dungeoneer.entities.Entity;
 import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.dungeoneer.game.Options;
+import com.interrupt.dungeoneer.GameManager;
 import com.interrupt.dungeoneer.input.Actions;
 import com.interrupt.dungeoneer.input.Actions.Action;
-import com.interrupt.dungeoneer.input.ControllerState;
 import com.interrupt.dungeoneer.ui.UiSkin;
 
 public class MapOverlay extends Overlay {
-
     TextureRegion mapArrowRegion = null;
     Vector2 mapOffset = new Vector2();
     public float timer = 0;
@@ -80,7 +76,7 @@ public class MapOverlay extends Overlay {
     }
 
     @Override
-    public void onShow() {
+    protected void onShow() {
         renderer = GameManager.renderer;
 
         mapArrowRegion =
@@ -208,13 +204,12 @@ public class MapOverlay extends Overlay {
     }
 
     @Override
-    public void onHide() {
-
+	protected void onHide() {
+        // Nothing to do here.
     }
 
     @Override
     protected void draw(float delta) {
-
         int width = Gdx.graphics.getWidth();
         int height = Gdx.graphics.getHeight();
 
