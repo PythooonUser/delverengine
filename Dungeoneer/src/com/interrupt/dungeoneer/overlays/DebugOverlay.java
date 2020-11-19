@@ -19,6 +19,7 @@ import com.interrupt.dungeoneer.entities.Monster;
 import com.interrupt.dungeoneer.entities.Player;
 import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.managers.ItemManager;
+import com.interrupt.managers.StringManager;
 
 import java.util.HashMap;
 
@@ -504,7 +505,7 @@ public class DebugOverlay extends WindowOverlay {
 		});
 
 		Table contentTable = new Table();
-	    Label title = new Label("DEBUG MENU", skin.get(LabelStyle.class));
+	    Label title = new Label(StringManager.get("overlays.DebugOverlay.title"), skin.get(LabelStyle.class));
 	    contentTable.add(title).colspan(2).padBottom(4f);
 	    contentTable.row();
 

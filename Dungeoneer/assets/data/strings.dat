@@ -589,6 +589,11 @@
         "localizedName": "Buy",
         "comment": "Text shown in the shop table in place of an items price. This indicates the player has selected the item to purchase."
     },
+    "overlays.DebugOverlay.title": {
+        "class": "com.interrupt.dungeoneer.game.LocalizedString",
+        "localizedName": "DEBUG MMENU",
+        "comment": "Text shown as the overlay title of the debug menu."
+    },
     "entities.Door.stuckText": {
         "class": "com.interrupt.dungeoneer.game.LocalizedString",
         "localizedName": "STUCK",
