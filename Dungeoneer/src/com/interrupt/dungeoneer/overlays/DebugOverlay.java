@@ -504,7 +504,7 @@ public class DebugOverlay extends WindowOverlay {
 		});
 
 		Table contentTable = new Table();
-	    Label title = new Label("DEBUG!", skin.get(LabelStyle.class));
+	    Label title = new Label("DEBUG MENU", skin.get(LabelStyle.class));
 	    contentTable.add(title).colspan(2).padBottom(4f);
 	    contentTable.row();
 
