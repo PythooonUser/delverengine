@@ -68,7 +68,7 @@ public class OverlayManager {
 		if(index >= 0) {
 			overlays.set(index, newOverlay);
 			newOverlay.show(false);
-			newOverlay.matchInputSettings(existing);
+			newOverlay.copyInputSettingsFrom(existing);
 		}
 	}
 
