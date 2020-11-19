@@ -591,8 +591,13 @@
     },
     "overlays.DebugOverlay.title": {
         "class": "com.interrupt.dungeoneer.game.LocalizedString",
-        "localizedName": "DEBUG MMENU",
+        "localizedName": "DEBUG MENU",
         "comment": "Text shown as the overlay title of the debug menu."
+    },
+    "overlays.DebugOverlay.doneButtonLabel": {
+        "class": "com.interrupt.dungeoneer.game.LocalizedString",
+        "localizedName": "Done",
+        "comment": "Text shown for the button that will close the overlay."
     },
     "entities.Door.stuckText": {
         "class": "com.interrupt.dungeoneer.game.LocalizedString",

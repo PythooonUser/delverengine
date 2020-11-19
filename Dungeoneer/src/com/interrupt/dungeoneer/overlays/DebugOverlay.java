@@ -30,6 +30,8 @@ public class DebugOverlay extends WindowOverlay {
 	protected final Color selectedValue = new Color(0.6f, 1f, 0.6f, 1f);
 	protected final Color unselectedValue = new Color(0.6f, 0.6f, 0.6f, 1f);
 
+	private final String doneButtonLabel = StringManager.get("overlays.DebugOverlay.doneButtonLabel");
+
 	/**
 	 * Constructs a new <code>DebugOverlay</code>.
 	 * @param player The current player.
@@ -493,7 +495,7 @@ public class DebugOverlay extends WindowOverlay {
 
 		final Overlay thisOverlay = this;
 
-		doneBtn = new TextButton("DONE", skin.get(TextButtonStyle.class));
+		doneBtn = new TextButton(doneButtonLabel, skin.get(TextButtonStyle.class));
 		doneBtn.setWidth(200);
 		doneBtn.setHeight(50);
 
@@ -594,7 +596,7 @@ public class DebugOverlay extends WindowOverlay {
 
 		final Overlay thisOverlay = this;
 
-		doneBtn = new TextButton("DONE", skin.get(TextButtonStyle.class));
+		doneBtn = new TextButton(doneButtonLabel, skin.get(TextButtonStyle.class));
 		doneBtn.setWidth(200);
 		doneBtn.setHeight(50);
 
@@ -627,7 +629,7 @@ public class DebugOverlay extends WindowOverlay {
 
 		final Overlay thisOverlay = this;
 
-		doneBtn = new TextButton("DONE", skin.get(TextButtonStyle.class));
+		doneBtn = new TextButton(doneButtonLabel, skin.get(TextButtonStyle.class));
 		doneBtn.setWidth(200);
 		doneBtn.setHeight(50);
 
@@ -660,7 +662,7 @@ public class DebugOverlay extends WindowOverlay {
 
 		final Overlay thisOverlay = this;
 
-		doneBtn = new TextButton("DONE", skin.get(TextButtonStyle.class));
+		doneBtn = new TextButton(doneButtonLabel, skin.get(TextButtonStyle.class));
 		doneBtn.setWidth(200);
 		doneBtn.setHeight(50);
 
@@ -697,7 +699,7 @@ public class DebugOverlay extends WindowOverlay {
 
 		final Overlay thisOverlay = this;
 
-		doneBtn = new TextButton("DONE", skin.get(TextButtonStyle.class));
+		doneBtn = new TextButton(doneButtonLabel, skin.get(TextButtonStyle.class));
 		doneBtn.setWidth(200);
 		doneBtn.setHeight(50);
 
@@ -730,7 +732,7 @@ public class DebugOverlay extends WindowOverlay {
 
 		final Overlay thisOverlay = this;
 
-		doneBtn = new TextButton("DONE", skin.get(TextButtonStyle.class));
+		doneBtn = new TextButton(doneButtonLabel, skin.get(TextButtonStyle.class));
 		doneBtn.setWidth(200);
 		doneBtn.setHeight(50);
 
