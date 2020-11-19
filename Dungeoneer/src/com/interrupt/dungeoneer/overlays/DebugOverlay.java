@@ -1,26 +1,26 @@
 package com.interrupt.dungeoneer.overlays;
 
-import java.util.HashMap;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.interrupt.dungeoneer.Art;
 import com.interrupt.dungeoneer.entities.Entity;
 import com.interrupt.dungeoneer.entities.Item;
+import com.interrupt.dungeoneer.entities.items.*;
 import com.interrupt.dungeoneer.entities.Monster;
 import com.interrupt.dungeoneer.entities.Player;
-import com.interrupt.dungeoneer.entities.items.*;
 import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.managers.ItemManager;
+
+import java.util.HashMap;
 
 public class DebugOverlay extends WindowOverlay {
 
