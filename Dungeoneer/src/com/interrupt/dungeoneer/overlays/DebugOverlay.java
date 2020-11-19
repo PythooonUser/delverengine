@@ -1,6 +1,5 @@
 package com.interrupt.dungeoneer.overlays;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -24,11 +23,9 @@ import com.interrupt.managers.StringManager;
 import java.util.HashMap;
 
 /** Class representing a debug overlay that lets the player spawn arbitrary items, alter state etc. */
-public class DebugOverlay extends WindowOverlay {
-	final Player player;
-	protected TextButton doneBtn;
-	protected final Color selectedValue = new Color(0.6f, 1f, 0.6f, 1f);
-	protected final Color unselectedValue = new Color(0.6f, 0.6f, 0.6f, 1f);
+public final class DebugOverlay extends WindowOverlay {
+	private final Player player;
+	private TextButton doneBtn;
 
 	private final String doneButtonLabel = StringManager.get("overlays.DebugOverlay.doneButtonLabel");
 
@@ -36,7 +33,7 @@ public class DebugOverlay extends WindowOverlay {
 	 * Constructs a new <code>DebugOverlay</code>.
 	 * @param player The current player.
 	 */
-	public DebugOverlay(Player player) {
+	public DebugOverlay(final Player player) {
 		super();
 
 		this.player = player;
