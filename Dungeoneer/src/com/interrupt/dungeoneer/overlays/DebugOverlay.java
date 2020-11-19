@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.interrupt.dungeoneer.Art;
-import com.interrupt.dungeoneer.entities.Entity;
 import com.interrupt.dungeoneer.entities.Item;
 import com.interrupt.dungeoneer.entities.items.*;
 import com.interrupt.dungeoneer.entities.Monster;
@@ -39,7 +38,7 @@ public final class DebugOverlay extends WindowOverlay {
 		this.player = player;
 	}
 
-	protected void addItem(Table table, final String text, final HashMap<String, Array<Monster>> value) {
+	private final void addItem(Table table, final String text, final HashMap<String, Array<Monster>> value) {
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
 		final Overlay thisOverlay = this;
@@ -68,7 +67,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-	protected void addItems(Table table, final String text, final HashMap<String, Array<Item>> value) {
+	private final void addItems(Table table, final String text, final HashMap<String, Array<Item>> value) {
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
 		final Overlay thisOverlay = this;
@@ -97,7 +96,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-	protected void addMonsters(Table table, final String text, final Array<Monster> value) {
+	private final void addMonsters(Table table, final String text, final Array<Monster> value) {
 
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
@@ -127,7 +126,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-	protected void addLevelUpItem(Table table, final String text) {
+	private final void addLevelUpItem(Table table, final String text) {
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
 		final Overlay thisOverlay = this;
@@ -158,7 +157,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-	protected void addGoDownItem(Table table, final String text) {
+	private final void addGoDownItem(Table table, final String text) {
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
 		final Overlay thisOverlay = this;
@@ -188,7 +187,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-    protected void addFlightItem(Table table, final String text) {
+    private final void addFlightItem(Table table, final String text) {
         final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
         final Overlay thisOverlay = this;
@@ -218,7 +217,7 @@ public final class DebugOverlay extends WindowOverlay {
         table.row();
     }
 
-    protected void addNoClipItem(Table table, final String text) {
+    private final void addNoClipItem(Table table, final String text) {
         final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
         final Overlay thisOverlay = this;
@@ -249,7 +248,7 @@ public final class DebugOverlay extends WindowOverlay {
         table.row();
     }
 
-	protected void addGodModeOption(Table table, final String text) {
+	private final void addGodModeOption(Table table, final String text) {
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
 		final Overlay thisOverlay = this;
@@ -279,7 +278,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-	protected void addNoTargetOption(Table table, final String text) {
+	private final void addNoTargetOption(Table table, final String text) {
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
 		final Overlay thisOverlay = this;
@@ -309,7 +308,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-    protected void addSuicideItem(Table table) {
+    private final void addSuicideItem(Table table) {
         final Label name = new Label("DIE", skin.get("input", LabelStyle.class));
 
         final Overlay thisOverlay = this;
@@ -339,7 +338,7 @@ public final class DebugOverlay extends WindowOverlay {
         table.row();
     }
 
-	protected void addRefreshItem(Table table) {
+	private final void addRefreshItem(Table table) {
 		final Label name = new Label("REFRESH", skin.get("input", LabelStyle.class));
 
 		final Overlay thisOverlay = this;
@@ -369,7 +368,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-	protected void addItems(Table table, final String category, final String text, final Array<Item> items) {
+	private final void addItems(Table table, final String category, final String text, final Array<Item> items) {
 
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
@@ -399,7 +398,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-	protected void addItem(Table table, final String text, Item item) {
+	private final void addItem(Table table, final String text, Item item) {
 
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
@@ -436,7 +435,7 @@ public final class DebugOverlay extends WindowOverlay {
 		table.row();
 	}
 
-	protected void addItem(Table table, final String text, Monster monster) {
+	private final void addItem(Table table, final String text, Monster monster) {
 
 		final Label name = new Label(text.toUpperCase(), skin.get("input", LabelStyle.class));
 
@@ -587,7 +586,7 @@ public final class DebugOverlay extends WindowOverlay {
 	    return contentTable;
 	}
 
-	protected Table makeContentFromMonsters(String titleText, HashMap<String, Array<Monster>> objects) {
+	private final Table makeContentFromMonsters(String titleText, HashMap<String, Array<Monster>> objects) {
 
 		buttonOrder.clear();
 
@@ -620,7 +619,7 @@ public final class DebugOverlay extends WindowOverlay {
 	    return contentTable;
 	}
 
-	protected Table makeContentFromItems(String titleText, HashMap<String, Array<Item>> objects) {
+	private final Table makeContentFromItems(String titleText, HashMap<String, Array<Item>> objects) {
 
 		buttonOrder.clear();
 
@@ -653,45 +652,7 @@ public final class DebugOverlay extends WindowOverlay {
 	    return contentTable;
 	}
 
-	protected Table makeContent(Entity[] objects) {
-
-		buttonOrder.clear();
-
-		final Overlay thisOverlay = this;
-
-		doneBtn = new TextButton(doneButtonLabel, skin.get(TextButtonStyle.class));
-		doneBtn.setWidth(200);
-		doneBtn.setHeight(50);
-
-		doneBtn.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				OverlayManager.instance.remove(thisOverlay);
-			}
-		});
-
-		Table contentTable = new Table();
-	    Label title = new Label("DEBUG!", skin.get(LabelStyle.class));
-	    contentTable.add(title).colspan(2).padBottom(4f);
-	    contentTable.row();
-
-	    for(Entity entry : objects) {
-	    	if(entry instanceof Item) {
-	    		addItem(contentTable, ((Item)entry).GetName(), (Item)entry);
-	    	}
-	    	else if(entry instanceof Monster) {
-	    		addItem(contentTable, ((Monster)entry).name, (Monster)entry);
-	    	}
-	    }
-
-	    contentTable.add(doneBtn).padTop(4).align(Align.center).colspan(2);
-
-	    buttonOrder.add(doneBtn);
-
-	    return contentTable;
-	}
-
-	protected Table makeContentFromItems(String titleText, Array<Item> objects) {
+	private final Table makeContentFromItems(String titleText, Array<Item> objects) {
 		buttonOrder.clear();
 
 		final Overlay thisOverlay = this;
@@ -723,7 +684,7 @@ public final class DebugOverlay extends WindowOverlay {
 	    return contentTable;
 	}
 
-	protected Table makeContent(String titleText, Array<Monster> objects) {
+	private final Table makeContent(String titleText, Array<Monster> objects) {
 
 		buttonOrder.clear();
 
