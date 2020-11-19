@@ -31,8 +31,8 @@ import com.interrupt.dungeoneer.ui.ActionSpinnerButton;
 import com.interrupt.dungeoneer.ui.SpinnerButton;
 import com.interrupt.dungeoneer.ui.UiSkin;
 
+/** Abstract class representing windowed UI overlays. */
 public abstract class WindowOverlay extends Overlay {
-	
 	public float timer = 0;
 	public Table stageTable;
 	public Float uiScale = null;
@@ -48,8 +48,8 @@ public abstract class WindowOverlay extends Overlay {
 	protected Integer gamepadSelectionIndex = null;
 	protected Integer lastGamepadSelectionIndex = null;
 
-	protected Array<Actor> buttonOrder = new Array<Actor>();
-	protected ArrayMap<Actor, Label> buttonLabels = new ArrayMap<Actor, Label>();
+	protected Array<Actor> buttonOrder = new Array<>();
+	protected ArrayMap<Actor, Label> buttonLabels = new ArrayMap<>();
 
 	public boolean animateBackground = true;
 	public boolean animate = true;
@@ -65,12 +65,8 @@ public abstract class WindowOverlay extends Overlay {
 
 	public boolean playSoundOnOpen = true;
 	
-	public WindowOverlay() {
-	}
-
 	@Override
 	public void tick(float delta) {
-
 		if(running) {
 			timer += delta;	
 		}
@@ -245,7 +241,6 @@ public abstract class WindowOverlay extends Overlay {
 
 		Gdx.app.log("Delver", Gdx.graphics.getWidth() + " x " + Gdx.graphics.getHeight());
 
-		//FillViewport viewport = new FillViewport(Gdx.graphics.getWidth() / uiScale, Gdx.graphics.getHeight() / uiScale);
 		ScalingViewport viewport = new ScalingViewport(Scaling.fill, 850f, 480f);
 		ui = new Stage(viewport);
 
@@ -306,7 +301,6 @@ public abstract class WindowOverlay extends Overlay {
 
 	@Override
 	protected void draw(float delta) {
-		
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 		
@@ -346,11 +340,6 @@ public abstract class WindowOverlay extends Overlay {
 		super.draw(delta);
 	}
 
-	@Override
-	public void onHide() {
-
-	}
-
 	public void addGamepadButtonOrder(Actor actor, Label label) {
 		buttonOrder.add(actor);
 		if(label != null) {
@@ -358,6 +347,6 @@ public abstract class WindowOverlay extends Overlay {
 		}
 	}
 
-	// Override this to make table content
+	/** Implement this method in order to create a table for the overlay content. */
 	public abstract Table makeContent();
 }
