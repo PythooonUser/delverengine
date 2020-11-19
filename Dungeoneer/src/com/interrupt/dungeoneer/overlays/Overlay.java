@@ -1,14 +1,13 @@
 package com.interrupt.dungeoneer.overlays;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.dungeoneer.GameInput;
 import com.interrupt.dungeoneer.GameManager;
-import com.interrupt.dungeoneer.game.Game;
-import com.interrupt.dungeoneer.game.Options;
 import com.interrupt.dungeoneer.gfx.GlRenderer;
 
 public abstract class Overlay {
