@@ -31,7 +31,7 @@ public class PropertiesMenu extends Table {
     private HashMap<Field, Actor> fieldMap = new HashMap<Field, Actor>();
 
     private final Array<Entity> selectedEntities;
-    private final Array<Class> classes;
+    private final Array<Class<?>> classes;
 
     public PropertiesMenu(Skin skin, final Array<Entity> entities) {
         super(skin);
@@ -39,13 +39,13 @@ public class PropertiesMenu extends Table {
         selectedEntities = entities;
 
         // add all of the classes from the first entity
-        classes = getClassesForEntity(entity);
+        classes = getClassesForObject(entity);
 
         // remove the non-common classes
-        Array<Class> nonCommon = new Array<Class>();
+        Array<Class<?>> nonCommon = new Array<>();
         for(Entity e : entities) {
-            Array<Class> checkClasses = getClassesForEntity(e);
-            for(Class existing : classes) {
+            Array<Class<?>> checkClasses = getClassesForObject(e);
+            for (Class<?> existing : classes) {
                 if(!checkClasses.contains(existing, true)) nonCommon.add(existing);
             }
         }
@@ -480,15 +480,16 @@ public class PropertiesMenu extends Table {
         }
     }
 
-    public Array<Class> getClassesForEntity(Entity entity) {
-        Array<Class> classes = new Array<Class>();
-        {
-            Class c = entity.getClass();
-            while (c != null) {
-                classes.add(c);
-                c = c.getSuperclass();
-            }
+    /** Returns all classes (including super classes) for the given object. */
+    private <T> Array<Class<?>> getClassesForObject(T object) {
+        Array<Class<?>> classes = new Array<>();
+
+        Class<?> c = object.getClass();
+        while (c != null) {
+            classes.add(c);
+            c = c.getSuperclass();
         }
+
         return classes;
     }
 
