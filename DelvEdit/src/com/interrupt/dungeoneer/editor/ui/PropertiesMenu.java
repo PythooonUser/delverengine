@@ -37,22 +37,10 @@ public class PropertiesMenu extends Table {
         final Entity entity = entities.get(0);
         selectedEntities = entities;
 
+        createMenuHeader(entity);
         Array<Class<?>> classes = getCommonClassesForObjects(entities);
 
         try {
-            // Show entity name as pane header.
-            String[] nameParts = entity.getClass().getName().split("\\.");
-
-            String entityName = "Unknown";
-            if (nameParts.length > 0) {
-                entityName = nameParts[nameParts.length - 1];
-            }
-
-            add(new Label(entityName, EditorUi.mediumSkin))
-                    .align(Align.left)
-                    .padLeft(-12f);
-            row();
-
             // gather all of the fields into groups
             for (Class<?> oClass : classes) {
                 Field[] fields = oClass.getDeclaredFields();
@@ -506,6 +494,24 @@ public class PropertiesMenu extends Table {
 
             return classes;
         }
+    }
+
+    private <T> String getObjectName(T object) {
+        String[] nameParts = object.getClass().getName().split("\\.");
+
+        String name = "Unknown";
+        if (nameParts.length > 0) {
+            name = nameParts[nameParts.length - 1];
+        }
+
+        return name;
+    }
+
+    private <T> void createMenuHeader(T object) {
+        String objectName = getObjectName(object);
+
+        add(new Label(objectName, EditorUi.mediumSkin)).align(Align.left).padLeft(-12f);
+        row();
     }
 
     public static boolean isEditorProperty(Field field) {
