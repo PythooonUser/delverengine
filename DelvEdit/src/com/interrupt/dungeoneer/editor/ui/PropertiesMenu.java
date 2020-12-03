@@ -31,25 +31,13 @@ public class PropertiesMenu extends Table {
     private HashMap<Field, Actor> fieldMap = new HashMap<Field, Actor>();
 
     private final Array<Entity> selectedEntities;
-    private final Array<Class<?>> classes;
 
     public PropertiesMenu(Skin skin, final Array<Entity> entities) {
         super(skin);
         final Entity entity = entities.get(0);
         selectedEntities = entities;
 
-        // add all of the classes from the first entity
-        classes = getClassesForObject(entity);
-
-        // remove the non-common classes
-        Array<Class<?>> nonCommon = new Array<>();
-        for(Entity e : entities) {
-            Array<Class<?>> checkClasses = getClassesForObject(e);
-            for (Class<?> existing : classes) {
-                if(!checkClasses.contains(existing, true)) nonCommon.add(existing);
-            }
-        }
-        classes.removeAll(nonCommon, true);
+        Array<Class<?>> classes = getCommonClassesForObjects(entities);
 
         try {
             // Show entity name as pane header.
@@ -66,7 +54,7 @@ public class PropertiesMenu extends Table {
             row();
 
             // gather all of the fields into groups
-            for (Class oClass : classes) {
+            for (Class<?> oClass : classes) {
                 Field[] fields = oClass.getDeclaredFields();
                 for (int i = 0; i < fields.length; i++) {
                     Field field = fields[i];
@@ -491,6 +479,33 @@ public class PropertiesMenu extends Table {
         }
 
         return classes;
+    }
+
+    /** Returns all common classes (including super classes) for the given array of objects. */
+    private <T> Array<Class<?>> getCommonClassesForObjects(Array<T> objects) {
+        if (objects.size <= 0) {
+            return new Array<>();
+        }
+        else if (objects.size <= 1) {
+            return new Array<>(getClassesForObject(objects.get(0)));
+        }
+        else {
+            Array<Class<?>> classes = getClassesForObject(objects.get(0));
+
+            // Remove any non-common classes.
+            Array<Class<?>> nonCommonClasses = new Array<>();
+            for(T o : objects) {
+                Array<Class<?>> classesToCheck = getClassesForObject(o);
+                for (Class<?> existingClass : classes) {
+                    if(!classesToCheck.contains(existingClass, true)) {
+                        nonCommonClasses.add(existingClass);
+                    }
+                }
+            }
+            classes.removeAll(nonCommonClasses, true);
+
+            return classes;
+        }
     }
 
     public static boolean isEditorProperty(Field field) {
