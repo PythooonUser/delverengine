@@ -47,11 +47,8 @@ public class PropertiesMenu extends Table {
                 Array<Field> fields = item.value;
                 if (fields == null) continue;
 
-                // don't display some items for a prefab or group
-                if (entity instanceof Prefab) {
-                    if (!item.key.equals("Prefab") && !item.key.equals("MonsterPrefab")) continue;
-                } else if (entity instanceof Group) {
-                    if (!item.key.equals("Group") && !item.key.equals("General")) continue;
+                if (!shouldRenderGroup(entity, item.key)) {
+                    continue;
                 }
 
                 if(fields.size == 0) continue;
@@ -540,6 +537,16 @@ public class PropertiesMenu extends Table {
         }
 
         return object.getClass().getSimpleName();
+    }
+
+    private <T> boolean shouldRenderGroup(T object, String groupName) {
+        if (object instanceof Prefab) {
+            return !(groupName.equals("Prefab") || groupName.equals("MonsterPrefab"));
+        } else if (object instanceof Group) {
+            return !(groupName.equals("Group") || !groupName.equals("General"));
+        }
+
+        return true;
     }
 
     public static String[] editorPropertyValidStrings(Field field, Entity entity) {
