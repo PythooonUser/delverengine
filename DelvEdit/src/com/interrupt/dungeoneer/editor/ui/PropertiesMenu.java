@@ -53,8 +53,7 @@ public class PropertiesMenu extends Table {
                 }
 
                 if(fields.size == 0) continue;
-                add(groupName).colspan(2).align(Align.left).padLeft(-8f);
-                row();
+                createGroupHeader(groupName);
 
                 // loop through the fields in the group
                 for(final Field field : fields) {
@@ -490,6 +489,11 @@ public class PropertiesMenu extends Table {
         String objectName = getObjectName(object);
 
         add(new Label(objectName, EditorUi.mediumSkin)).align(Align.left).padLeft(-12f);
+        row();
+    }
+
+    private void createGroupHeader(String groupName) {
+        add(groupName).colspan(2).align(Align.left).padLeft(-8f);
         row();
     }
 
