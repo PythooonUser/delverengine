@@ -44,15 +44,16 @@ public class PropertiesMenu extends Table {
 
             // loop through the groups
             for (ObjectMap.Entry<String, Array<Field>> item : fieldGroups.entries()) {
+                String groupName = item.key;
                 Array<Field> fields = item.value;
                 if (fields == null) continue;
 
-                if (!shouldRenderGroup(entity, item.key)) {
+                if (!shouldRenderGroup(entity, groupName)) {
                     continue;
                 }
 
                 if(fields.size == 0) continue;
-                add(item.key).colspan(2).align(Align.left).padLeft(-8f);
+                add(groupName).colspan(2).align(Align.left).padLeft(-8f);
                 row();
 
                 // loop through the fields in the group
