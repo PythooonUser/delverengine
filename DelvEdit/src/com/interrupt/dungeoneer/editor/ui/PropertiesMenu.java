@@ -27,7 +27,6 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class PropertiesMenu extends Table {
-    public ArrayMap<String, Array<Field>> arrayMap = new ArrayMap<String, Array<Field>>();
     private HashMap<Field, Actor> fieldMap = new HashMap<Field, Actor>();
 
     private final Array<Entity> selectedEntities;
@@ -41,28 +40,10 @@ public class PropertiesMenu extends Table {
         Array<Class<?>> classes = getCommonClassesForObjects(entities);
 
         try {
-            // gather all of the fields into groups
-            for (Class<?> oClass : classes) {
-                Field[] fields = oClass.getDeclaredFields();
-                for (int i = 0; i < fields.length; i++) {
-                    Field field = fields[i];
-                    field.setAccessible(true);
-
-                    String groupName = editorPropertyGroup(field, entity);
-                    if (!field.getType().isArray() && !Modifier.isTransient(field.getModifiers()) && isEditorProperty(field)) {
-                        Array<Field> groupItems = arrayMap.get(groupName);
-                        if (groupItems == null) {
-                            groupItems = new Array<Field>();
-                            arrayMap.put(groupName, groupItems);
-                        }
-
-                        groupItems.add(field);
-                    }
-                }
-            }
+            ArrayMap<String, Array<Field>> fieldGroups = getFieldGroups(classes, entity);
 
             // loop through the groups
-            for (ObjectMap.Entry<String, Array<Field>> item : arrayMap.entries()) {
+            for (ObjectMap.Entry<String, Array<Field>> item : fieldGroups.entries()) {
                 Array<Field> fields = item.value;
                 if (fields == null) continue;
 
@@ -514,18 +495,51 @@ public class PropertiesMenu extends Table {
         row();
     }
 
-    public static boolean isEditorProperty(Field field) {
+    private <T> ArrayMap<String, Array<Field>> getFieldGroups(Array<Class<?>> classes, T object) {
+        ArrayMap<String, Array<Field>> groups = new ArrayMap<>();
 
-        Annotation annotation = field.getAnnotation(EditorProperty.class);
-        if(annotation != null) return true;
+        for (Class<?> c : classes) {
+            Field[] fields = c.getDeclaredFields();
 
-        return false;
+            for (int i = 0; i < fields.length; i++) {
+                Field field = fields[i];
+
+                try {
+                    field.setAccessible(true);
+                } catch (Exception ignored) {
+                    continue;
+                }
+
+                String groupName = getEditorPropertyGroupName(field, object);
+                if (!field.getType().isArray() && !Modifier.isTransient(field.getModifiers())
+                        && isEditorProperty(field)) {
+                    Array<Field> groupItems = groups.get(groupName);
+                    if (groupItems == null) {
+                        groupItems = new Array<Field>();
+                        groups.put(groupName, groupItems);
+                    }
+
+                    groupItems.add(field);
+                }
+            }
+        }
+
+        return groups;
     }
 
-    public static String editorPropertyGroup(Field field, Entity entity) {
+    private boolean isEditorProperty(Field field) {
+        Annotation annotation = field.getAnnotation(EditorProperty.class);
+        return (annotation != null);
+    }
+
+    private <T> String getEditorPropertyGroupName(Field field, T object) {
         EditorProperty annotation = field.getAnnotation(EditorProperty.class);
-        if(annotation != null && !annotation.group().equals("")) return annotation.group();
-        return entity.getClass().getSimpleName();
+
+        if (annotation != null && !annotation.group().equals("")) {
+            return annotation.group();
+        }
+
+        return object.getClass().getSimpleName();
     }
 
     public static String[] editorPropertyValidStrings(Field field, Entity entity) {
