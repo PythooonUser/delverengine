@@ -68,36 +68,8 @@ public class PropertiesMenu extends Table {
                     if (isSelectBoxType(field)) {
                         renderSelectBoxType(field, v, label, skin);
                     }
-                    else if(field.getType() == String.class && isFilePicker(field)) {
-                        final String filePickerType = getFilePickerType(field);
-                        final Skin finalSkin = skin;
-                        final TextButton button = new TextButton(v, skin);
-                        final FileHandle folder = new FileHandle(filePickerType);
-
-                        button.addListener(new ClickListener() {
-                            @Override
-                            public void clicked(InputEvent event, float x, float y) {
-                                AssetPicker picker = new AssetPicker("Select File", finalSkin, button.getText().toString(), folder, getFilePickerIncludeBase(field)) {
-                                    @Override
-                                    protected void result(Object object) {
-                                        Boolean result = (Boolean)object;
-                                        if(result) {
-                                            String picked = getResult();
-                                            button.setText(picked);
-                                            applyChanges(field);
-                                        }
-                                    }
-                                }.setFileNameEnabled(false);
-
-                                Editor.app.ui.getStage().addActor(picker);
-                                picker.show(getStage());
-                            }
-                        });
-
-                        add(label).align(Align.left);
-                        add(button).height(58f).align(Align.left).fill();
-
-                        fieldMap.put(field, button);
+                    else if (isFilePickerType(field)) {
+                        renderFilePickerType(field, v, label, skin);
                     }
                     else if(field.getType() == String.class) {
                         TextField tf = new TextField(v, skin);
@@ -582,16 +554,52 @@ public class PropertiesMenu extends Table {
         return false;
     }
 
-    public static boolean isFilePicker(Field field) {
+    private boolean isFilePickerType(Field field) {
+        return (field.getType() == String.class && isFilePicker(field));
+    }
+
+    private boolean isFilePicker(Field field) {
         EditorProperty annotation = field.getAnnotation(EditorProperty.class);
-        if(annotation != null && annotation.type().equals("FILE_PICKER")) return true;
-        return false;
+        return (annotation != null && annotation.type().equals("FILE_PICKER"));
     }
 
     public static String getFilePickerType(Field field) {
         EditorProperty annotation = field.getAnnotation(EditorProperty.class);
         if(annotation != null && annotation.type().equals("FILE_PICKER")) return annotation.params();
         return null;
+    }
+
+    private void renderFilePickerType(Field field, String value, Label label, Skin skin) {
+        final String filePickerType = getFilePickerType(field);
+        final Skin finalSkin = skin;
+        final TextButton button = new TextButton(value, skin);
+        final FileHandle folder = new FileHandle(filePickerType);
+
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                AssetPicker picker = new AssetPicker("Select File", finalSkin, button.getText().toString(), folder,
+                        getFilePickerIncludeBase(field)) {
+                    @Override
+                    protected void result(Object object) {
+                        Boolean result = (Boolean) object;
+                        if (result) {
+                            String picked = getResult();
+                            button.setText(picked);
+                            applyChanges(field);
+                        }
+                    }
+                }.setFileNameEnabled(false);
+
+                Editor.app.ui.getStage().addActor(picker);
+                picker.show(getStage());
+            }
+        });
+
+        add(label).align(Align.left);
+        add(button).height(58f).align(Align.left).fill();
+
+        fieldMap.put(field, button);
     }
 
     public static boolean getFilePickerIncludeBase(Field field) {
