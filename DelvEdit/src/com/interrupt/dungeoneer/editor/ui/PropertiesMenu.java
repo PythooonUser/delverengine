@@ -57,22 +57,19 @@ public class PropertiesMenu extends Table {
 
                 // loop through the fields in the group
                 for(final Field field : fields) {
-                    Object value = getCommonValue(field, entities);
+                    Object value = getCommonValueForObjects(field, entities);
 
                     Label label = new Label(field.getName(), skin);
                     label.setColor(1f, 1f, 1f, 0.75f);
 
-                    String v = "";
-                    if(value != null) v = value.toString();
-
                     if (isSelectBoxType(field)) {
-                        renderSelectBoxType(field, v, label, skin);
+                        renderSelectBoxType(field, value, label, skin);
                     }
                     else if (isFilePickerType(field)) {
-                        renderFilePickerType(field, v, label, skin);
+                        renderFilePickerType(field, value, label, skin);
                     }
                     else if(field.getType() == String.class) {
-                        TextField tf = new TextField(v, skin);
+                        TextField tf = new TextField((value != null ? value.toString() : ""), skin);
                         tf.setTextFieldListener(getTextFieldListener(field));
 
                         add(label).align(Align.left);
@@ -207,7 +204,7 @@ public class PropertiesMenu extends Table {
                         fieldMap.put(field, button);
                     }
                     else if(field.getType() == int.class || field.getType() == Integer.class) {
-                        final TextField tf = new TextField(v, skin);
+                        final TextField tf = new TextField((value != null ? value.toString() : ""), skin);
                         tf.setTextFieldFilter(new IntegerFilter());
                         tf.setTextFieldListener(getTextFieldListener(field));
                         tf.addListener(new InputListener() {
@@ -237,7 +234,7 @@ public class PropertiesMenu extends Table {
                         fieldMap.put(field, tf);
                     }
                     else if(field.getType() == float.class || field.getType() == double.class) {
-                        final TextField tf = new TextField(v, skin);
+                        final TextField tf = new TextField((value != null ? value.toString() : ""), skin);
                         tf.setTextFieldFilter(new DecimalsFilter());
                         tf.setTextFieldListener(getTextFieldListener(field));
                         tf.addListener(new InputListener() {
@@ -321,7 +318,7 @@ public class PropertiesMenu extends Table {
                     else if(field.getType().isEnum()) {
                         SelectBox sb = new SelectBox(skin);
                         sb.setItems(field.getType().getEnumConstants());
-                        setSelectedIn(sb, v);
+                        setSelectedIn(sb, (value != null ? value.toString() : ""));
                         sb.addListener(getSelectBoxListener(field));
 
                         add(label).align(Align.left);
@@ -378,7 +375,7 @@ public class PropertiesMenu extends Table {
 
                         SelectBox sb = new SelectBox(skin);
                         sb.setItems(values);
-                        setSelectedIn(sb, v);
+                        setSelectedIn(sb, (value != null ? value.toString() : ""));
                         sb.addListener(getSelectBoxListener(field));
 
                         add(label).align(Align.left);
@@ -536,10 +533,11 @@ public class PropertiesMenu extends Table {
         return (field.getType() == String.class && getValidEditorPropertyStrings(field) != null);
     }
 
-    private void renderSelectBoxType(Field field, String value, Label label, Skin skin) {
+    private void renderSelectBoxType(Field field, Object value, Label label, Skin skin) {
+        String stringifiedValue = (value != null ? value.toString() : "");
         SelectBox<String> selectBox = new SelectBox<>(skin);
         selectBox.setItems(getValidEditorPropertyStrings(field));
-        setSelectedIn(selectBox, value);
+        setSelectedIn(selectBox, stringifiedValue);
         selectBox.addListener(getSelectBoxListener(field));
 
         add(label).align(Align.left);
@@ -569,10 +567,11 @@ public class PropertiesMenu extends Table {
         return null;
     }
 
-    private void renderFilePickerType(Field field, String value, Label label, Skin skin) {
+    private void renderFilePickerType(Field field, Object value, Label label, Skin skin) {
+        String stringifiedValue = (value != null ? value.toString() : "");
         final String filePickerType = getFilePickerType(field);
         final Skin finalSkin = skin;
-        final TextButton button = new TextButton(value, skin);
+        final TextButton button = new TextButton(stringifiedValue, skin);
         final FileHandle folder = new FileHandle(filePickerType);
 
         button.addListener(new ClickListener() {
@@ -608,16 +607,25 @@ public class PropertiesMenu extends Table {
         return false;
     }
 
-    private Object getCommonValue(Field field, Array<Entity> entities) throws IllegalAccessException {
-        Object commonVal = null;
-        for(Entity entity : entities) {
-            Object val = field.get(entity);
-            if(commonVal == null && val != null) commonVal = val;
-            else if(commonVal != null && !commonVal.equals(val)) return null; // no common value, return null
+    private <T> Object getCommonValueForObjects(Field field, Array<T> objects) {
+        Object commonValue = null;
+
+        for (T o : objects) {
+            Object value = null;
+            try {
+                value = field.get(o);
+            } catch (Exception e) {
+                continue;
+            }
+
+            if (commonValue == null && value != null) {
+                commonValue = value;
+            } else if (commonValue != null && !commonValue.equals(value)) {
+                return null;
+            }
         }
 
-        // found a common value!
-        return commonVal;
+        return commonValue;
     }
 
     public TextField.TextFieldListener getTextFieldListener(final Field currentField) {
