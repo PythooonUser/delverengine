@@ -190,8 +190,10 @@ public class PropertiesMenu extends Table {
                                     public void result(Integer value, String atlas) {
 
                                         for(int i = 0; i < entities.size; i++) {
-                                            entities.get(i).spriteAtlas = atlas;
-                                            if (entities.get(i).drawable != null) entities.get(i).drawable.refresh();
+                                            try {
+                                                ((Entity)entities.get(i)).spriteAtlas = atlas;
+                                                if (((Entity)entities.get(i)).drawable != null) ((Entity)entities.get(i)).drawable.refresh();
+                                            } catch (Exception ignored) { }
                                         }
 
                                         applyChanges(field, value.toString());
