@@ -316,7 +316,7 @@ public class PropertiesMenu extends Table {
                         fieldMap.put(field, tf);
                     }
                     else if(field.getType().isEnum()) {
-                        SelectBox sb = new SelectBox(skin);
+                        SelectBox<Object> sb = new SelectBox<>(skin);
                         sb.setItems(field.getType().getEnumConstants());
                         setSelectedIn(sb, (value != null ? value.toString() : ""));
                         sb.addListener(getSelectBoxListener(field));
@@ -373,7 +373,7 @@ public class PropertiesMenu extends Table {
                         values[0] = true;
                         values[1] = false;
 
-                        SelectBox sb = new SelectBox(skin);
+                        SelectBox<Boolean> sb = new SelectBox<>(skin);
                         sb.setItems(values);
                         setSelectedIn(sb, (value != null ? value.toString() : ""));
                         sb.addListener(getSelectBoxListener(field));
@@ -833,11 +833,11 @@ public class PropertiesMenu extends Table {
         }
     }
 
-    public void setSelectedIn(SelectBox select, String value) {
-        Array items = select.getItems();
+    private <T> void setSelectedIn(SelectBox<T> selectBox, String value) {
+        Array<T> items = selectBox.getItems();
         for(int i = 0; i < items.size; i++) {
             if(items.get(i).toString().equals(value)) {
-                select.setSelectedIndex(i);
+                selectBox.setSelectedIndex(i);
                 return;
             }
         }
