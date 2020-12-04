@@ -65,9 +65,9 @@ public class PropertiesMenu extends Table {
                     String v = "";
                     if(value != null) v = value.toString();
 
-                    if(field.getType() == String.class && editorPropertyValidStrings(field, entity) != null) {
-                        SelectBox sb = new SelectBox(skin);
-                        sb.setItems(editorPropertyValidStrings(field, entity));
+                    if (field.getType() == String.class && getValidEditorPropertyStrings(field) != null) {
+                        SelectBox<String> sb = new SelectBox<>(skin);
+                        sb.setItems(getValidEditorPropertyStrings(field));
                         setSelectedIn(sb, v);
                         sb.addListener(getSelectBoxListener(field));
 
@@ -554,12 +554,15 @@ public class PropertiesMenu extends Table {
         return true;
     }
 
-    public static String[] editorPropertyValidStrings(Field field, Entity entity) {
+    private String[] getValidEditorPropertyStrings(Field field) {
         EditorProperty annotation = field.getAnnotation(EditorProperty.class);
-        if(annotation != null && annotation.valid().length > 0) return annotation.valid();
-
-        if(annotation != null && annotation.type().equals("SPRITE_ATLAS_LIST")) {
-            return EditorArt.getAtlasList();
+        
+        if (annotation != null) {
+            if (annotation.valid().length > 0) {
+                return annotation.valid();
+            } else if (annotation.type().equals("SPRITE_ATLAS_LIST")) {
+                return EditorArt.getAtlasList();
+            }
         }
 
         return null;
