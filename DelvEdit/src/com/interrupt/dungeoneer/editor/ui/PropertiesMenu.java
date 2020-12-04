@@ -145,7 +145,12 @@ public class PropertiesMenu extends Table {
                         Integer val = (Integer)value;
                         if(val == null) val = 0;
 
-                        final TextureAtlas atlas = TextureAtlas.getCachedRegion(entity.spriteAtlas);
+                        String spriteAtlas = null;
+                        try {
+                            spriteAtlas = ((Entity)entity).spriteAtlas;
+                        } catch (Exception ignored) { }
+
+                        final TextureAtlas atlas = TextureAtlas.getCachedRegion(spriteAtlas);
                         ImageButton button = null;
 
                         try {
