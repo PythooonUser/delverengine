@@ -65,16 +65,8 @@ public class PropertiesMenu extends Table {
                     String v = "";
                     if(value != null) v = value.toString();
 
-                    if (field.getType() == String.class && getValidEditorPropertyStrings(field) != null) {
-                        SelectBox<String> sb = new SelectBox<>(skin);
-                        sb.setItems(getValidEditorPropertyStrings(field));
-                        setSelectedIn(sb, v);
-                        sb.addListener(getSelectBoxListener(field));
-
-                        add(label).align(Align.left);
-                        add(sb).align(Align.left).fill();
-
-                        fieldMap.put(field, sb);
+                    if (isSelectBoxType(field)) {
+                        renderSelectBoxType(field, v, label, skin);
                     }
                     else if(field.getType() == String.class && isFilePicker(field)) {
                         final String filePickerType = getFilePickerType(field);
@@ -566,6 +558,22 @@ public class PropertiesMenu extends Table {
         }
 
         return null;
+    }
+
+    private boolean isSelectBoxType(Field field) {
+        return (field.getType() == String.class && getValidEditorPropertyStrings(field) != null);
+    }
+
+    private void renderSelectBoxType(Field field, String value, Label label, Skin skin) {
+        SelectBox<String> selectBox = new SelectBox<>(skin);
+        selectBox.setItems(getValidEditorPropertyStrings(field));
+        setSelectedIn(selectBox, value);
+        selectBox.addListener(getSelectBoxListener(field));
+
+        add(label).align(Align.left);
+        add(selectBox).align(Align.left).fill();
+
+        fieldMap.put(field, selectBox);
     }
 
     public static boolean isAtlasRegionPicker(Field field) {
