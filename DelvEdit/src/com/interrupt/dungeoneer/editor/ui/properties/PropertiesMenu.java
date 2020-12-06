@@ -85,6 +85,8 @@ public class PropertiesMenu extends Table {
 
                 inputField.renderLabel(field.getName(), this, skin);
                 inputField.renderField(field, getCommonValueForObjects(field, objects), onChangeListener, this, skin);
+
+                row();
             }
         }
 

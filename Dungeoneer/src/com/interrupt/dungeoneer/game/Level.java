@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.interrupt.dungeoneer.Audio;
 import com.interrupt.dungeoneer.GameManager;
+import com.interrupt.dungeoneer.annotations.EditorProperty;
 import com.interrupt.dungeoneer.collision.Collision;
 import com.interrupt.dungeoneer.collision.Collision.CollisionType;
 import com.interrupt.dungeoneer.editor.EditorMarker;
@@ -117,18 +118,22 @@ public class Level {
 	public int dungeonLevel;
 
 	/** Theme to apply to level. */
+	@EditorProperty(group = "Theme")
 	public String theme;
 
 	/** Comma separated list of mp3 filepaths. */
+		@EditorProperty(group = "Music")
 	public String music;
 
 	/** Comma separated list of mp3 filepaths. */
+	@EditorProperty(group = "Music")
 	public String actionMusic;
 
 	/** Play music on a loop. */
 	public Boolean loopMusic = true;
 
 	/** Ambient sound filepath. */
+	@EditorProperty(group = "Sounds")
 	public String ambientSound = null;
 
 	/** Ambient sound volume. */
