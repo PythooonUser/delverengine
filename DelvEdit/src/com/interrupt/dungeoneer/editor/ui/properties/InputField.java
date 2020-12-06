@@ -11,13 +11,7 @@ import com.badlogic.gdx.utils.Align;
 public abstract class InputField {
     public abstract boolean canHandle(final Field field);
 
-    public final void render(final String fieldName, final Field field, final Object value,
-            final InputFieldListener listener, final Table table, final Skin skin) {
-        renderLabel(fieldName, table, skin);
-        renderField(field, value, listener, table, skin);
-    }
-
-    private final void renderLabel(final String fieldName, final Table table, final Skin skin) {
+    public void renderLabel(final String fieldName, final Table table, final Skin skin) {
         final Label label = new Label(fieldName, skin);
         label.setColor(1f, 1f, 1f, 0.75f);
         table.add(label).align(Align.left);

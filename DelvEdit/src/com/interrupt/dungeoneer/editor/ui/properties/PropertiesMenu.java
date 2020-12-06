@@ -22,9 +22,7 @@ public class PropertiesMenu extends Table {
     private final InputFieldListener onChangeListener = new InputFieldListener() {
         @Override
         public void onChange(final InputField inputField, final Field field, final Object value) {
-            for (final Object object : objects) {
-                inputField.apply(field, object, value);
-            }
+            PropertiesMenu.this.handleOnChange(inputField, field, value);
         }
     };
 
@@ -85,8 +83,8 @@ public class PropertiesMenu extends Table {
                             + field.getType().toString() + "'");
                 }
 
-                inputField.render(field.getName(), field, getCommonValueForObjects(field, objects), onChangeListener,
-                        this, skin);
+                inputField.renderLabel(field.getName(), this, skin);
+                inputField.renderField(field, getCommonValueForObjects(field, objects), onChangeListener, this, skin);
             }
         }
     }
@@ -211,7 +209,7 @@ public class PropertiesMenu extends Table {
         return (annotation != null);
     }
 
-    protected final <T> boolean shouldRenderGroup(final String groupName, final Array<Class<?>> classes) {
+    private final <T> boolean shouldRenderGroup(final String groupName, final Array<Class<?>> classes) {
         if (classes.contains(Prefab.class, false)) {
             return !(groupName.equals("Prefab") || groupName.equals("MonsterPrefab"));
         } else if (classes.contains(Group.class, false)) {
@@ -221,11 +219,17 @@ public class PropertiesMenu extends Table {
         return true;
     }
 
-    protected Array<InputField> getAvailableInputFields() {
+    private final Array<InputField> getAvailableInputFields() {
         final Array<InputField> inputFields = new Array<>();
 
         inputFields.add(new TextInputField());
 
         return inputFields;
+    }
+
+    private final void handleOnChange(final InputField inputField, final Field field, final Object value) {
+        for (final Object object : objects) {
+            inputField.apply(field, object, value);
+        }
     }
 }

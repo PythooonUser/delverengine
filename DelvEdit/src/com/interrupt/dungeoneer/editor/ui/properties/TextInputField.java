@@ -15,7 +15,7 @@ public final class TextInputField extends InputField {
     }
 
     @Override
-    protected final void renderField(final Field field, final Object value, final InputFieldListener onChangeListener,
+    public final void renderField(final Field field, final Object value, final InputFieldListener onChangeListener,
             final Table table, final Skin skin) {
         final TextField textField = new TextField((value != null ? value.toString() : ""), skin);
 
