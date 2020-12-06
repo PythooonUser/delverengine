@@ -18,6 +18,7 @@ import com.interrupt.dungeoneer.editor.*;
 import com.interrupt.dungeoneer.editor.ui.menu.*;
 import com.interrupt.dungeoneer.editor.ui.menu.generator.LevelGeneratorMenuItem;
 import com.interrupt.dungeoneer.editor.ui.menu.generator.RoomGeneratorMenuItem;
+import com.interrupt.dungeoneer.editor.ui.properties.LevelPropertiesMenuDialog;
 import com.interrupt.dungeoneer.entities.Entity;
 import com.interrupt.dungeoneer.game.Game;
 
@@ -48,6 +49,7 @@ public class EditorUi {
     ActionListener uploadModAction;
     ActionListener setThemeAction;
     ActionListener setFogSettingsAction;
+    ActionListener setLevelPropertiesAction;
 
     private final Vector2 propertiesSize = new Vector2();
 
@@ -108,6 +110,17 @@ public class EditorUi {
                 };
 
                 themeDialog.show(stage);
+            }
+        };
+
+        setLevelPropertiesAction = new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                LevelPropertiesMenuDialog dialog = new LevelPropertiesMenuDialog(Editor.app.getLevel(), smallSkin) {
+                    @Override
+                    protected void result(Object object) { }
+                };
+
+                dialog.show(stage);
             }
         };
 
@@ -293,6 +306,7 @@ public class EditorUi {
                 .addSeparator()
                 .addItem(new MenuItem("Set Theme", smallSkin, setThemeAction))
                 .addItem(new MenuItem("Set Fog Settings", smallSkin, setFogSettingsAction))
+                .addItem(new MenuItem("Set Level Properties", smallSkin, setLevelPropertiesAction))
                 .addSeparator()
                 .addItem(new RoomGeneratorMenuItem(smallSkin))
                 .addItem(new LevelGeneratorMenuItem(smallSkin))

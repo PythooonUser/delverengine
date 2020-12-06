@@ -26,7 +26,7 @@ public class PropertiesMenu extends Table {
         }
     };
 
-    public <T> PropertiesMenu(final Skin skin, final T object) {
+    public <T> PropertiesMenu(final T object, final Skin skin) {
         super(skin);
 
         final Array<T> objects = new Array<>();
@@ -36,7 +36,7 @@ public class PropertiesMenu extends Table {
         render(skin);
     }
 
-    public <T> PropertiesMenu(final Skin skin, final Array<T> objects) {
+    public <T> PropertiesMenu(final Array<T> objects, final Skin skin) {
         super(skin);
 
         this.objects = objects;
@@ -87,6 +87,8 @@ public class PropertiesMenu extends Table {
                 inputField.renderField(field, getCommonValueForObjects(field, objects), onChangeListener, this, skin);
             }
         }
+
+        pack();
     }
 
     private final void renderGroupHeader(final String groupName) {
