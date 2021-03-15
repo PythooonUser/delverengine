@@ -8,6 +8,10 @@ public abstract class Requirement {
     @EditorProperty
     public CountType type = CountType.GREATER_THAN_OR_EQUAL;
 
+    public enum CountType {
+        GREATER_THAN_OR_EQUAL
+    }
+
     /** Implement this for custom test conditions. */
     public abstract boolean test(Player player);
 

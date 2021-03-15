@@ -9,6 +9,10 @@ public class RequirementBuilder {
     @EditorProperty
     public CollectionType type = CollectionType.ALL;
 
+    public enum CollectionType {
+        ALL, ANY
+    }
+
     /** Should the thing being required being consumed on fullfilment? */
     @EditorProperty
     public boolean consume = true;
