@@ -67,7 +67,11 @@ public class Door extends Entity {
 	@EditorProperty
 	public boolean isLocked = false;
 
-	/** Can door be unlocked with a key? */
+	/**
+     * Can door be unlocked with a key?
+     * @deprecated Use <code>requires</code> instead
+     */
+    @Deprecated
 	@EditorProperty
 	public boolean takesKey = false;
 
@@ -136,6 +140,7 @@ public class Door extends Entity {
 	/** Door collision origin. */
 	public Vector3 startLoc = null;
 
+    /** Can door be opened using items etc.? */
     public RequirementBuilder requires = null;
 
 	private float rot = 0;
