@@ -1,12 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
-    "title": "ItemNameRequirement",
+    "title": "GoldRequirement",
     "type": "object",
     "properties": {
         "class": {
-            "const": "com.interrupt.dungeoneer.requirements.ItemNameRequirement",
+            "const": "com.interrupt.dungeoneer.requirements.GoldRequirement",
             "description": "Fully-qualified Java class name.",
-            "baseClass": "ItemNameRequirement"
+            "baseClass": "GoldRequirement"
         },
         "type": {
             "$ref": "#/definitions/CountType",
@@ -14,15 +14,10 @@
             "default": "GREATER_THAN_OR_EQUAL",
             "baseClass": "Requirement"
         },
-        "name": {
-            "type": "string",
-            "description": "The name of the item.",
-            "baseClass": "ItemNameRequirement"
-        },
-        "count": {
+        "amount": {
             "type": "integer",
-            "description": "The required item count.",
-            "baseClass": "ItemNameRequirement",
+            "description": "The required gold amount.",
+            "baseClass": "GoldRequirement",
             "default": 1
         }
     },
