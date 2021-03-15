@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "RequirementBuilder",
+    "type": "object",
+    "properties": {
+        "class": {
+            "const": "com.interrupt.dungeoneer.requirements.RequirementBuilder",
+            "description": "Fully-qualified Java class name.",
+            "baseClass": "RequirementBuilder"
+        },
+        "type": {
+            "$ref": "#/definitions/CollectionType",
+            "description": "Collection type defines which requirements are necessary for fullfilment.",
+            "default": "ALL",
+            "baseClass": "RequirementBuilder"
+        },
+        "consume": {
+            "type": "boolean",
+            "description": "Should the thing being required being consumed on fullfilment?",
+            "baseClass": "RequirementBuilder",
+            "default": true
+        }
+    },
+    "definitions": {
+        "CollectionType": {
+            "type": "string",
+            "enum": [
+                "ALL",
+                "ANY"
+            ]
+        }
+    }
+}
