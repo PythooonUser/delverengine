@@ -26,6 +26,9 @@ public class Door extends Entity {
     public enum DoorDirection {NORTH, SOUTH, EAST, WEST};
     public enum DoorType {NORMAL, TRAPDOOR};
 
+    @EditorProperty
+    public String transKeyLocked = "entities.Door.lockedText";
+
     /** Door mesh filepath. */
     @EditorProperty(type = "FILE_PICKER", params = "meshes")
     public String doorMesh = "meshes/door_0.obj";
@@ -238,7 +241,7 @@ public class Door extends Entity {
                         Game.ShowMessage(StringManager.get("entities.Door.unlockedText"), 3, 1f);
                         doOpen(true);
                     } else {
-                        Game.ShowMessage(StringManager.get("entities.Door.lockedText"), 3, 1f);
+                        Game.ShowMessage(StringManager.get(transKeyLocked), 3, 1f);
                     }
                 }
                 else if (null != requires) {
@@ -248,7 +251,7 @@ public class Door extends Entity {
                         doOpen(true);
                     }
                     else {
-                        Game.ShowMessage(StringManager.get("entities.Door.lockedText"), 3, 1f);
+                        Game.ShowMessage(StringManager.get(transKeyLocked), 3, 1f);
                     }
                 } else {
                     Game.ShowMessage(StringManager.get("entities.Door.opensElsewhereText"), 3, 1f);
