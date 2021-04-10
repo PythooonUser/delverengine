@@ -15,10 +15,12 @@ public class UiSkin {
     private static Skin skin;
     private static BitmapFont font;
 
+    private UiSkin() {
+    }
+
     public static Skin getSkin() {
         if (skin == null)
             loadSkin();
-            //font.setScale(1f);
 
         return skin;
     }
@@ -26,7 +28,6 @@ public class UiSkin {
     public static BitmapFont getFont() {
         if (font == null)
             loadSkin();
-            //font.setScale(1f);
 
         return font;
     }
@@ -116,7 +117,7 @@ public class UiSkin {
         skin.add("default", labelStyle);
 
         Texture fontTex = Art.loadTexture("ui/pixel.png");
-        float fontScale = fontTex.getWidth() / 128;
+        float fontScale = fontTex.getWidth() / 128f;
 
         for (int ii = 0; ii < font.getData().glyphs.length; ii++) {
             for (int i = 0; font.getData().glyphs[ii] != null && i < font.getData().glyphs[ii].length; i++) {
@@ -140,12 +141,10 @@ public class UiSkin {
 
     public static void clearCache() {
         if (skin != null) {
-            //skin.dispose();
             skin = null;
         }
 
         if (font != null) {
-            //font.dispose();
             font = null;
         }
 
