@@ -34,6 +34,7 @@ import com.interrupt.dungeoneer.serializers.KryoSerializer;
 import com.interrupt.dungeoneer.ui.*;
 import com.interrupt.dungeoneer.ui.Hud.DragAndDropResult;
 import com.interrupt.managers.EntityManager;
+import com.interrupt.managers.HUDManager;
 import com.interrupt.managers.ItemManager;
 import com.interrupt.managers.MonsterManager;
 import com.interrupt.managers.StringManager;
@@ -93,8 +94,8 @@ public class Game {
 	public static Tooltip tooltip = new Tooltip();
     public static Stage ui;
 
-    public static Hotbar hotbar = new Hotbar(6,1,0);
-    public static Hotbar bag = new Hotbar(6,3,6);
+    public static Hotbar hotbar;
+    public static Hotbar bag;
     public static Hud hud = null;
 
     public static CharacterScreen characterScreen = null;
@@ -167,6 +168,17 @@ public class Game {
 			entityManager = new EntityManager();
 		}
 		EntityManager.setSingleton(entityManager);
+
+        // Load HUD data
+        HUDManager hudManager = modManager.loadHUDManager();
+
+        if (null == hudManager) {
+            hudManager = new HUDManager();
+            ShowMessage(MessageFormat.format(StringManager.get("game.Game.errorLoadingDataText"), "HUD.DAT"), 2, 1f);
+        }
+
+        hotbar = hudManager.quickSlots;
+        bag = hudManager.backpack;
 	}
 
 	/** Create game for editor usage. */
