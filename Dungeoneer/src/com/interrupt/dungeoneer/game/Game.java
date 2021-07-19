@@ -169,16 +169,7 @@ public class Game {
 		}
 		EntityManager.setSingleton(entityManager);
 
-        // Load HUD data
-        HUDManager hudManager = modManager.loadHUDManager();
-
-        if (null == hudManager) {
-            hudManager = new HUDManager();
-            ShowMessage(MessageFormat.format(StringManager.get("game.Game.errorLoadingDataText"), "HUD.DAT"), 2, 1f);
-        }
-
-        hotbar = hudManager.quickSlots;
-        bag = hudManager.backpack;
+        loadHUDManager(modManager);
 	}
 
 	/** Create game for editor usage. */
@@ -1536,4 +1527,24 @@ public class Game {
 
 		return min;
 	}
+
+    private void loadHUDManager(ModManager modManager) {
+        HUDManager hudManager = modManager.loadHUDManager();
+
+        if (null == hudManager) {
+            hudManager = new HUDManager();
+            ShowMessage(MessageFormat.format(StringManager.get("game.Game.errorLoadingDataText"), "HUD.DAT"), 2, 1f);
+        }
+
+        // FIXME: Make the enclosing method "static" or remove this set. sonarlint(java:S2696)
+        hotbar = hudManager.quickSlots;
+        if (null == hotbar) {
+            hotbar = new Hotbar(6, 1, 0);
+        }
+
+        bag = hudManager.backpack;
+        if (null == bag) {
+            bag = new Hotbar(6, 3, 6);
+        }
+    }
 }
