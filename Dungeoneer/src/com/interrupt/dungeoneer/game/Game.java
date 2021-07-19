@@ -198,7 +198,6 @@ public class Game {
 
 		DecalManager.setQuality(Options.instance.gfxQuality);
 
-		bag.visible = false;
 		// Load the base game data
 		if(gameData == null) {
 			gameData = modManager.loadGameData();
@@ -212,6 +211,8 @@ public class Game {
 		hud = new Hud();
 
 		loadManagers();
+
+        bag.visible = false;
 
 		Gdx.app.log("DelverLifeCycle", "READY EDITOR ONE");
 
