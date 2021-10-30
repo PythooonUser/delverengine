@@ -174,8 +174,6 @@ public class EditorApplication implements ApplicationListener {
 
     private boolean tileDragging = false;
 
-    private boolean vertexSelectionMode = false;
-
     public float time = 0;
 
 	protected DecalBatch spriteBatch;
@@ -231,10 +229,12 @@ public class EditorApplication implements ApplicationListener {
 
 	DrawableSprite unknownEntityMarker = new DrawableSprite();
 
+    boolean vertexSelectionMode = false;
 	Array<ControlPoint> controlPoints = new Array<>();
 	ControlPoint pickedControlPoint = null;
-	public boolean movingControlPoint = false;
-    public Color controlPointColor = new Color(1f, 0.4f, 0f, 1f);
+	boolean movingControlPoint = false;
+    Color controlPointHighlightColor = Color.WHITE;
+    Color controlPointDefaultColor = new Color(1f, 0.4f, 0f, 1f);
 
 	Vector3 xGridStart = new Vector3();
 	Vector3 xGridEnd = new Vector3();
@@ -982,18 +982,7 @@ public class EditorApplication implements ApplicationListener {
 				}
 			}
 
-			Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
-			if(!movingControlPoint) pickedControlPoint = null;
-			for(ControlPoint point : controlPoints) {
-				if(!ui.isShowingContextMenu()) {
-					if (pickedControlPoint == null && Intersector.intersectRaySphere(ray, point.point, 0.12f, intersection)) {
-						pickedControlPoint = point;
-					}
-				}
-
-				if(!movingControlPoint || pickedControlPoint == point)
-					drawPoint(point.point, 5f, pickedControlPoint == point ? Color.WHITE : controlPointColor);
-			}
+            renderControlPoints();
 
 			// draw lines
 			if(!vertexSelectionMode) {
@@ -2532,6 +2521,7 @@ public class EditorApplication implements ApplicationListener {
 
         Decal sd = getDecal();
 		sd.setRotation(tempVector1.set(camera.direction.x, camera.direction.y, camera.direction.z).nor().scl(-1f), Vector3.Y);
+        // TODO: Scale should probably take `width` into account.
 		sd.setScale((pos2.len() / camera.far) * (pos2.len() * 0.5f) + 1);
 		sd.setTextureRegion(editorSprites[17]);
 		sd.setPosition(start.x, start.y, start.z);
@@ -3816,4 +3806,27 @@ public class EditorApplication implements ApplicationListener {
 	public void setTitle(String title) {
 		Gdx.graphics.setTitle(title + " - DelvEdit - " + Game.VERSION);
 	}
+
+    void renderControlPoints() {
+        // TODO: This whole picking logic should be separated from the rendering.
+        Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+
+        if (!movingControlPoint) {
+            pickedControlPoint = null;
+        }
+
+        for (ControlPoint point : controlPoints) {
+            if (!ui.isShowingContextMenu() && pickedControlPoint == null && Intersector.intersectRaySphere(ray, point.point, 0.12f, intersection)) {
+                pickedControlPoint = point;
+            }
+
+            if (!movingControlPoint || pickedControlPoint == point) {
+                drawPoint(
+                    point.point,
+                    5f,
+                    pickedControlPoint == point ? controlPointHighlightColor : controlPointDefaultColor
+                );
+            }
+        }
+    }
 }
