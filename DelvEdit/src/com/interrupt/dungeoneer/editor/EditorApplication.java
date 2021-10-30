@@ -229,12 +229,12 @@ public class EditorApplication implements ApplicationListener {
 
 	DrawableSprite unknownEntityMarker = new DrawableSprite();
 
-    boolean vertexSelectionMode = false;
-	Array<ControlPoint> controlPoints = new Array<>();
-	ControlPoint pickedControlPoint = null;
-	boolean movingControlPoint = false;
-    Color controlPointHighlightColor = Color.WHITE;
-    Color controlPointDefaultColor = new Color(1f, 0.4f, 0f, 1f);
+    private HeightEditMode heightEditMode = HeightEditMode.PLANE;
+	private Array<ControlPoint> controlPoints = new Array<>();
+	private ControlPoint pickedControlPoint = null;
+	private boolean movingControlPoint = false;
+    private Color controlPointHighlightColor = Color.WHITE;
+    private Color controlPointDefaultColor = new Color(1f, 0.4f, 0f, 1f);
 
 	Vector3 xGridStart = new Vector3();
 	Vector3 xGridEnd = new Vector3();
@@ -911,7 +911,7 @@ public class EditorApplication implements ApplicationListener {
 			// init the control point list if needed
 			if(controlPoints.size == 0) {
 
-				if(!vertexSelectionMode) {
+				if(heightEditMode == HeightEditMode.PLANE) {
 					// floor and ceiling control points
 					controlPoints.add(new ControlPoint(new Vector3(selX + (selWidth / 2f), startTile.floorHeight, selY + (selHeight / 2f)), ControlPoint.ControlPointType.FLOOR));
 					controlPoints.add(new ControlPoint(new Vector3(selX + (selWidth / 2f), startTile.ceilHeight, selY + (selHeight / 2f)), ControlPoint.ControlPointType.CEILING));
@@ -938,7 +938,7 @@ public class EditorApplication implements ApplicationListener {
 					controlPoints.add(new ControlPoint(westEdgeFloor, ControlPoint.ControlPointType.FLOOR_WEST));
 					controlPoints.add(new ControlPoint(eastEdgeFloor, ControlPoint.ControlPointType.FLOOR_EAST));
 				}
-				else {
+				else if (heightEditMode == HeightEditMode.VERTEX) {
                     for (TileSelectionInfo info : Editor.selection.tiles) {
                         Tile current = info.tile;
 
@@ -985,7 +985,7 @@ public class EditorApplication implements ApplicationListener {
             renderControlPoints();
 
 			// draw lines
-			if(!vertexSelectionMode) {
+			if(heightEditMode == HeightEditMode.PLANE) {
 				for(int xx = selX; xx < selX + selWidth; xx++) {
 					Tile north = level.getTile(xx, selY);
 					Tile south = level.getTile(xx, selY + selHeight - 1);
@@ -2104,18 +2104,18 @@ public class EditorApplication implements ApplicationListener {
         refreshLights();
     }
 
-    public void setPlaneHeightMode() {
-        vertexSelectionMode = false;
+    public void setPlaneHeightEditMode() {
+        heightEditMode = HeightEditMode.PLANE;
         controlPoints.clear();
     }
 
-    public void setVertexHeightMode() {
-        vertexSelectionMode = true;
+    public void setVertexHeightEditMode() {
+        heightEditMode = HeightEditMode.VERTEX;
         controlPoints.clear();
     }
 
-    public void toggleVertexHeightMode() {
-        vertexSelectionMode = !vertexSelectionMode;
+    public void toggleHeightEditMode() {
+        heightEditMode = heightEditMode == HeightEditMode.PLANE ? HeightEditMode.VERTEX : HeightEditMode.PLANE;
         controlPoints.clear();
     }
 
@@ -3807,7 +3807,7 @@ public class EditorApplication implements ApplicationListener {
 		Gdx.graphics.setTitle(title + " - DelvEdit - " + Game.VERSION);
 	}
 
-    void renderControlPoints() {
+    private void renderControlPoints() {
         // TODO: This whole picking logic should be separated from the rendering.
         Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
 

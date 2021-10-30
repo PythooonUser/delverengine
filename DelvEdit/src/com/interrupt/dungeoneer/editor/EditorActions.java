@@ -19,9 +19,9 @@ public class EditorActions {
     public ActionListener carveAction;
     public ActionListener paintAction;
     public ActionListener deleteAction;
-    public ActionListener planeHeightAction;
-    public ActionListener vertexHeightAction;
-    public ActionListener vertexToggleAction;
+    public ActionListener planeHeightEditModeAction;
+    public ActionListener vertexHeightEditModeAction;
+    public ActionListener heightEditModeToggleAction;
     public ActionListener undoAction;
     public ActionListener redoAction;
     public ActionListener toggleGizmosAction;
@@ -142,26 +142,9 @@ public class EditorActions {
             }
         };
 
-        planeHeightAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Editor.app.setPlaneHeightMode();
-            }
-        };
-
-        vertexHeightAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Editor.app.setVertexHeightMode();
-            }
-        };
-
-        vertexToggleAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Editor.app.toggleVertexHeightMode();
-            }
-        };
+        planeHeightEditModeAction = actionEvent -> Editor.app.setPlaneHeightEditMode();
+        vertexHeightEditModeAction = actionEvent -> Editor.app.setVertexHeightEditMode();
+        heightEditModeToggleAction = actionEvent -> Editor.app.toggleHeightEditMode();
 
         undoAction = new ActionListener() {
             @Override
