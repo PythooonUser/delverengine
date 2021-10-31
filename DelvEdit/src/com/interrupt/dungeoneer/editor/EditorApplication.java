@@ -931,63 +931,8 @@ public class EditorApplication implements ApplicationListener {
                 }
 			}
 
-			Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
-			if(!movingControlPoint) pickedControlPoint = null;
-			for(ControlPoint point : controlPoints) {
-				if(!ui.isShowingContextMenu()) {
-					if (pickedControlPoint == null && Intersector.intersectRaySphere(ray, point.point, 0.12f, intersection)) {
-						pickedControlPoint = point;
-					}
-				}
-
-				if(!movingControlPoint || pickedControlPoint == point)
-					drawPoint(point.point, 5f, pickedControlPoint == point ? Color.WHITE : controlPointColor);
-			}
-
-			// draw lines
-			if(selectionMode == SelectionMode.EDGE) {
-				for(int xx = selX; xx < selX + selWidth; xx++) {
-					Tile north = level.getTile(xx, selY);
-					Tile south = level.getTile(xx, selY + selHeight - 1);
-
-					// ceil north
-					if(!north.renderSolid)
-						drawLine(tempVec1.set(xx, north.ceilSlopeNE + north.ceilHeight, selY), tempVec2.set(xx + 1f,north.ceilSlopeNW + north.ceilHeight,selY), 2f, pickedControlPoint != null && pickedControlPoint.isNorthCeiling() ? Color.WHITE : Color.RED);
-
-					// ceil south
-					if(!south.renderSolid)
-						drawLine(tempVec1.set(xx, south.ceilSlopeSE + south.ceilHeight, selY + selHeight), tempVec2.set(xx + 1f,south.ceilSlopeSW + south.ceilHeight,selY + selHeight), 2f, pickedControlPoint != null && pickedControlPoint.isSouthCeiling() ? Color.WHITE : Color.RED);
-
-					// floor north
-					if(!north.renderSolid)
-						drawLine(tempVec1.set(xx, north.slopeNE + north.floorHeight, selY), tempVec2.set(xx + 1f,north.slopeNW + north.floorHeight,selY), 2f, pickedControlPoint != null && pickedControlPoint.isNorthFloor() ? Color.WHITE : Color.RED);
-
-					// floor south
-					if(!south.renderSolid)
-						drawLine(tempVec1.set(xx, south.slopeSE + south.floorHeight, selY + selHeight), tempVec2.set(xx + 1f,south.slopeSW + south.floorHeight,selY + selHeight), 2f, pickedControlPoint != null && pickedControlPoint.isSouthFloor() ? Color.WHITE : Color.RED);
-				}
-
-				for(int yy = selY; yy < selY + selHeight; yy++) {
-					Tile west = level.getTile(selX, yy);
-					Tile east = level.getTile(selX + selWidth - 1, yy);
-
-					// ceil west
-					if(!west.renderSolid)
-						drawLine(tempVec1.set(selX, west.ceilSlopeNE + west.ceilHeight, yy), tempVec2.set(selX,west.ceilSlopeSE + west.ceilHeight,yy + 1), 2f, pickedControlPoint != null && pickedControlPoint.isWestCeiling() ? Color.WHITE : Color.RED);
-
-					// ceil east
-					if(!east.renderSolid)
-						drawLine(tempVec1.set(selX + selWidth, east.ceilSlopeNW + east.ceilHeight, yy), tempVec2.set(selX + selWidth,east.ceilSlopeSW + east.ceilHeight,yy + 1), 2f, pickedControlPoint != null && pickedControlPoint.isEastCeiling() ? Color.WHITE : Color.RED);
-
-					// floor west
-					if(!west.renderSolid)
-						drawLine(tempVec1.set(selX, west.slopeNE + west.floorHeight, yy), tempVec2.set(selX,west.slopeSE + west.floorHeight,yy + 1), 2f, pickedControlPoint != null && pickedControlPoint.isWestFloor() ? Color.WHITE : Color.RED);
-
-					// floor east
-					if(!east.renderSolid)
-						drawLine(tempVec1.set(selX + selWidth, east.slopeNW + east.floorHeight, yy), tempVec2.set(selX + selWidth,east.slopeSW + east.floorHeight,yy + 1), 2f, pickedControlPoint != null && pickedControlPoint.isEastFloor() ? Color.WHITE : Color.RED);
-				}
-			}
+			drawControlPoints();
+            drawSelectionOutline(selX, selY, selWidth, selHeight);
 		}
 
 		if(movingControlPoint && pickedControlPoint != null) {
@@ -3877,5 +3822,69 @@ public class EditorApplication implements ApplicationListener {
 
     private void addControlPoint(Vector3 point, ControlPointVertex vertex) {
         controlPoints.add(new ControlPoint(point, vertex));
+    }
+
+    private void drawControlPoints() {
+        Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+
+        if (!movingControlPoint) {
+            pickedControlPoint = null;
+        }
+
+        for (ControlPoint point : controlPoints) {
+            if (!ui.isShowingContextMenu() && pickedControlPoint == null && Intersector.intersectRaySphere(ray, point.point, 0.12f, intersection)) {
+                pickedControlPoint = point;
+            }
+
+            if (!movingControlPoint || pickedControlPoint == point) {
+                drawPoint(point.point, 5f, pickedControlPoint == point ? Color.WHITE : controlPointColor);
+            }
+        }
+    }
+
+    private void drawSelectionOutline(int selX, int selY, int selWidth, int selHeight) {
+        if(selectionMode == SelectionMode.EDGE) {
+            for(int xx = selX; xx < selX + selWidth; xx++) {
+                Tile north = level.getTile(xx, selY);
+                Tile south = level.getTile(xx, selY + selHeight - 1);
+
+                // ceil north
+                if(!north.renderSolid)
+                    drawLine(tempVec1.set(xx, north.ceilSlopeNE + north.ceilHeight, selY), tempVec2.set(xx + 1f,north.ceilSlopeNW + north.ceilHeight,selY), 2f, pickedControlPoint != null && pickedControlPoint.isNorthCeiling() ? Color.WHITE : Color.RED);
+
+                // ceil south
+                if(!south.renderSolid)
+                    drawLine(tempVec1.set(xx, south.ceilSlopeSE + south.ceilHeight, selY + selHeight), tempVec2.set(xx + 1f,south.ceilSlopeSW + south.ceilHeight,selY + selHeight), 2f, pickedControlPoint != null && pickedControlPoint.isSouthCeiling() ? Color.WHITE : Color.RED);
+
+                // floor north
+                if(!north.renderSolid)
+                    drawLine(tempVec1.set(xx, north.slopeNE + north.floorHeight, selY), tempVec2.set(xx + 1f,north.slopeNW + north.floorHeight,selY), 2f, pickedControlPoint != null && pickedControlPoint.isNorthFloor() ? Color.WHITE : Color.RED);
+
+                // floor south
+                if(!south.renderSolid)
+                    drawLine(tempVec1.set(xx, south.slopeSE + south.floorHeight, selY + selHeight), tempVec2.set(xx + 1f,south.slopeSW + south.floorHeight,selY + selHeight), 2f, pickedControlPoint != null && pickedControlPoint.isSouthFloor() ? Color.WHITE : Color.RED);
+            }
+
+            for(int yy = selY; yy < selY + selHeight; yy++) {
+                Tile west = level.getTile(selX, yy);
+                Tile east = level.getTile(selX + selWidth - 1, yy);
+
+                // ceil west
+                if(!west.renderSolid)
+                    drawLine(tempVec1.set(selX, west.ceilSlopeNE + west.ceilHeight, yy), tempVec2.set(selX,west.ceilSlopeSE + west.ceilHeight,yy + 1), 2f, pickedControlPoint != null && pickedControlPoint.isWestCeiling() ? Color.WHITE : Color.RED);
+
+                // ceil east
+                if(!east.renderSolid)
+                    drawLine(tempVec1.set(selX + selWidth, east.ceilSlopeNW + east.ceilHeight, yy), tempVec2.set(selX + selWidth,east.ceilSlopeSW + east.ceilHeight,yy + 1), 2f, pickedControlPoint != null && pickedControlPoint.isEastCeiling() ? Color.WHITE : Color.RED);
+
+                // floor west
+                if(!west.renderSolid)
+                    drawLine(tempVec1.set(selX, west.slopeNE + west.floorHeight, yy), tempVec2.set(selX,west.slopeSE + west.floorHeight,yy + 1), 2f, pickedControlPoint != null && pickedControlPoint.isWestFloor() ? Color.WHITE : Color.RED);
+
+                // floor east
+                if(!east.renderSolid)
+                    drawLine(tempVec1.set(selX + selWidth, east.slopeNW + east.floorHeight, yy), tempVec2.set(selX + selWidth,east.slopeSW + east.floorHeight,yy + 1), 2f, pickedControlPoint != null && pickedControlPoint.isEastFloor() ? Color.WHITE : Color.RED);
+            }
+        }
     }
 }
