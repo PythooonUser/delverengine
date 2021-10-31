@@ -982,76 +982,19 @@ public class EditorApplication implements ApplicationListener {
 
 			// init the control point list if needed
 			if(controlPoints.size == 0) {
-
-				if(selectionMode == SelectionMode.EDGE) {
-					// floor and ceiling control points
-					controlPoints.add(new ControlPoint(new Vector3(selX + (selWidth / 2f), startTile.floorHeight, selY + (selHeight / 2f)), ControlPointType.floor));
-					controlPoints.add(new ControlPoint(new Vector3(selX + (selWidth / 2f), startTile.ceilHeight, selY + (selHeight / 2f)), ControlPointType.ceiling));
-
-					// ceiling edges
-					Vector3 northEdgeCeil = new Vector3(selX + (selWidth / 2f), startTile.ceilHeight, selY);
-					Vector3 southEdgeCeil = new Vector3(selX + (selWidth / 2f), startTile.ceilHeight, selY + selHeight);
-					Vector3 westEdgeCeil = new Vector3(selX, startTile.ceilHeight, selY + (selHeight / 2f));
-					Vector3 eastEdgeCeil = new Vector3(selX + selWidth, startTile.ceilHeight, selY + (selHeight / 2f));
-
-					controlPoints.add(new ControlPoint(northEdgeCeil, ControlPointType.northCeil));
-					controlPoints.add(new ControlPoint(southEdgeCeil, ControlPointType.southCeil));
-					controlPoints.add(new ControlPoint(westEdgeCeil, ControlPointType.westCeil));
-					controlPoints.add(new ControlPoint(eastEdgeCeil, ControlPointType.eastCeil));
-
-					// floor edges
-					Vector3 northEdgeFloor = new Vector3(selX + (selWidth / 2f), startTile.floorHeight, selY);
-					Vector3 southEdgeFloor = new Vector3(selX + (selWidth / 2f), startTile.floorHeight, selY + selHeight);
-					Vector3 westEdgeFloor = new Vector3(selX, startTile.floorHeight, selY + (selHeight / 2f));
-					Vector3 eastEdgeFloor = new Vector3(selX + selWidth, startTile.floorHeight, selY + (selHeight / 2f));
-
-					controlPoints.add(new ControlPoint(northEdgeFloor, ControlPointType.northFloor));
-					controlPoints.add(new ControlPoint(southEdgeFloor, ControlPointType.southFloor));
-					controlPoints.add(new ControlPoint(westEdgeFloor, ControlPointType.westFloor));
-					controlPoints.add(new ControlPoint(eastEdgeFloor, ControlPointType.eastFloor));
-				}
-				else if (selectionMode == SelectionMode.VERTEX) {
-                    for (TileSelectionInfo info : Editor.selection.tiles) {
-                        Tile current = info.tile;
-
-                        if(current != null && !current.renderSolid) {
-                            if(current.tileSpaceType != TileSpaceType.OPEN_SE) {
-                                controlPoints.add(new ControlPoint(new Vector3(info.x, current.ceilHeight + current.ceilSlopeNE, info.y), new ControlPointVertex(current,ControlVertex.ceilNE)));
-                                controlPoints.add(new ControlPoint(new Vector3(info.x, current.floorHeight + current.slopeNE, info.y), new ControlPointVertex(current,ControlVertex.slopeNE)));
-                            }
-
-                            if(current.tileSpaceType != TileSpaceType.OPEN_SW) {
-                                controlPoints.add(new ControlPoint(new Vector3(info.x + 1, current.ceilHeight + current.ceilSlopeNW, info.y), new ControlPointVertex(current,ControlVertex.ceilNW)));
-                                controlPoints.add(new ControlPoint(new Vector3(info.x + 1, current.floorHeight + current.slopeNW, info.y), new ControlPointVertex(current,ControlVertex.slopeNW)));
-                            }
-
-                            if(current.tileSpaceType != TileSpaceType.OPEN_NE) {
-                                controlPoints.add(new ControlPoint(new Vector3(info.x, current.ceilHeight + current.ceilSlopeSE, info.y + 1), new ControlPointVertex(current,ControlVertex.ceilSE)));
-                                controlPoints.add(new ControlPoint(new Vector3(info.x, current.floorHeight + current.slopeSE, info.y + 1), new ControlPointVertex(current,ControlVertex.slopeSE)));
-                            }
-
-                            if(current.tileSpaceType != TileSpaceType.OPEN_NW) {
-                                controlPoints.add(new ControlPoint(new Vector3(info.x + 1, current.ceilHeight + current.ceilSlopeSW, info.y + 1), new ControlPointVertex(current,ControlVertex.ceilSW)));
-                                controlPoints.add(new ControlPoint(new Vector3(info.x + 1, current.floorHeight + current.slopeSW, info.y + 1), new ControlPointVertex(current,ControlVertex.slopeSW)));
-                            }
-						}
-					}
-
-					// filter out duplicate vertices
-					ArrayMap<String, ControlPoint> reduceMap = new ArrayMap<String, ControlPoint>();
-					for(ControlPoint point : controlPoints) {
-						String key = point.point.x + "," + point.point.y + "," + point.point.z;
-						ControlPoint found = reduceMap.get(key);
-
-						if(found != null) found.vertices.addAll(point.vertices);
-						else reduceMap.put(key, point);
-					}
-
-					controlPoints.clear();
-					for(ControlPoint point : reduceMap.values()) {
-						controlPoints.add(point);
-					}
-				}
+                switch (selectionMode) {
+                    case VERTEX:
+                        calculateControlPointsForVertexSelectionMode();
+                        break;
+                    case EDGE:
+                        calculateControlPointsForEdgeSelectionMode(selX, selY, selWidth, selHeight, startTile);
+                        break;
+                    case FACE:
+                        calculateControlPointsForFaceSelectionMode(selX, selY, selWidth, selHeight, startTile);
+                        break;
+                    default:
+                        break;
+                }
 			}
 
 			Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
@@ -3896,4 +3839,97 @@ public class EditorApplication implements ApplicationListener {
 	public void setTitle(String title) {
 		Gdx.graphics.setTitle(title + " - DelvEdit - " + Game.VERSION);
 	}
+
+    private void calculateControlPointsForVertexSelectionMode() {
+        for (TileSelectionInfo info : Editor.selection.tiles) {
+            Tile current = info.tile;
+
+            if(current != null && !current.renderSolid) {
+                if(current.tileSpaceType != TileSpaceType.OPEN_SE) {
+                    addControlPoint(new Vector3(info.x, current.ceilHeight + current.ceilSlopeNE, info.y), new ControlPointVertex(current,ControlVertex.ceilNE));
+                    addControlPoint(new Vector3(info.x, current.floorHeight + current.slopeNE, info.y), new ControlPointVertex(current,ControlVertex.slopeNE));
+                }
+
+                if(current.tileSpaceType != TileSpaceType.OPEN_SW) {
+                    addControlPoint(new Vector3(info.x + 1f, current.ceilHeight + current.ceilSlopeNW, info.y), new ControlPointVertex(current,ControlVertex.ceilNW));
+                    addControlPoint(new Vector3(info.x + 1f, current.floorHeight + current.slopeNW, info.y), new ControlPointVertex(current,ControlVertex.slopeNW));
+                }
+
+                if(current.tileSpaceType != TileSpaceType.OPEN_NE) {
+                    addControlPoint(new Vector3(info.x, current.ceilHeight + current.ceilSlopeSE, info.y + 1f), new ControlPointVertex(current,ControlVertex.ceilSE));
+                    addControlPoint(new Vector3(info.x, current.floorHeight + current.slopeSE, info.y + 1f), new ControlPointVertex(current,ControlVertex.slopeSE));
+                }
+
+                if(current.tileSpaceType != TileSpaceType.OPEN_NW) {
+                    addControlPoint(new Vector3(info.x + 1f, current.ceilHeight + current.ceilSlopeSW, info.y + 1f), new ControlPointVertex(current,ControlVertex.ceilSW));
+                    addControlPoint(new Vector3(info.x + 1f, current.floorHeight + current.slopeSW, info.y + 1f), new ControlPointVertex(current,ControlVertex.slopeSW));
+                }
+            }
+        }
+
+        // filter out duplicate vertices
+        ArrayMap<String, ControlPoint> reduceMap = new ArrayMap<>();
+
+        for(ControlPoint point : controlPoints) {
+            String key = point.point.x + "," + point.point.y + "," + point.point.z;
+            ControlPoint found = reduceMap.get(key);
+
+            if(found != null) found.vertices.addAll(point.vertices);
+            else reduceMap.put(key, point);
+        }
+
+        controlPoints.clear();
+
+        for(ControlPoint point : reduceMap.values()) {
+            controlPoints.add(point);
+        }
+    }
+
+    private void calculateControlPointsForEdgeSelectionMode(int x, int y, int width, int height, Tile startTile) {
+        float xMid = x + width / 2f;
+        float xFull = x + (float) width;
+        float yMid = y + height / 2f;
+        float yFull = y + (float) height;
+
+        // ceiling edges
+        Vector3 northEdgeCeil = new Vector3(xMid, startTile.ceilHeight, y);
+        Vector3 southEdgeCeil = new Vector3(xMid, startTile.ceilHeight, yFull);
+        Vector3 westEdgeCeil = new Vector3(x, startTile.ceilHeight, yMid);
+        Vector3 eastEdgeCeil = new Vector3(xFull, startTile.ceilHeight, yMid);
+
+        addControlPoint(northEdgeCeil, ControlPointType.northCeil);
+        addControlPoint(southEdgeCeil, ControlPointType.southCeil);
+        addControlPoint(westEdgeCeil, ControlPointType.westCeil);
+        addControlPoint(eastEdgeCeil, ControlPointType.eastCeil);
+
+        // floor edges
+        Vector3 northEdgeFloor = new Vector3(xMid, startTile.floorHeight, y);
+        Vector3 southEdgeFloor = new Vector3(xMid, startTile.floorHeight, yFull);
+        Vector3 westEdgeFloor = new Vector3(x, startTile.floorHeight, yMid);
+        Vector3 eastEdgeFloor = new Vector3(xFull, startTile.floorHeight, yMid);
+
+        addControlPoint(northEdgeFloor, ControlPointType.northFloor);
+        addControlPoint(southEdgeFloor, ControlPointType.southFloor);
+        addControlPoint(westEdgeFloor, ControlPointType.westFloor);
+        addControlPoint(eastEdgeFloor, ControlPointType.eastFloor);
+    }
+
+    private void calculateControlPointsForFaceSelectionMode(int x, int y, int width, int height, Tile startTile) {
+        float xMid = x + width / 2f;
+        float xFull = x + (float) width;
+        float yMid = y + height / 2f;
+        float yFull = y + (float) height;
+
+        // floor and ceiling control points
+        addControlPoint(new Vector3(xMid, startTile.floorHeight, yMid), ControlPointType.floor);
+        addControlPoint(new Vector3(xMid, startTile.ceilHeight, yMid), ControlPointType.ceiling);
+    }
+
+    private void addControlPoint(Vector3 point, ControlPointType type) {
+        controlPoints.add(new ControlPoint(point, type));
+    }
+
+    private void addControlPoint(Vector3 point, ControlPointVertex vertex) {
+        controlPoints.add(new ControlPoint(point, vertex));
+    }
 }
