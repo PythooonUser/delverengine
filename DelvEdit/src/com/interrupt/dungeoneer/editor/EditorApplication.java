@@ -38,6 +38,10 @@ import com.interrupt.dungeoneer.editor.history.EditorHistory;
 import com.interrupt.dungeoneer.editor.selection.AdjacentTileSelectionInfo;
 import com.interrupt.dungeoneer.editor.selection.TileSelection;
 import com.interrupt.dungeoneer.editor.selection.TileSelectionInfo;
+import com.interrupt.dungeoneer.editor.ui.ControlPoint;
+import com.interrupt.dungeoneer.editor.ui.ControlPointType;
+import com.interrupt.dungeoneer.editor.ui.ControlPointVertex;
+import com.interrupt.dungeoneer.editor.ui.ControlVertex;
 import com.interrupt.dungeoneer.editor.ui.EditorUi;
 import com.interrupt.dungeoneer.editor.ui.SaveChangesDialog;
 import com.interrupt.dungeoneer.editor.ui.SelectionMode;
@@ -91,8 +95,6 @@ public class EditorApplication implements ApplicationListener {
 	public GlRenderer renderer = null;
 	public EditorFile file = null;
 
-	public enum ControlPointType { floor, ceiling, northCeil, northFloor, eastCeil, eastFloor, southCeil, southFloor, westCeil, westFloor, vertex };
-	public enum ControlVertex { slopeNW, slopeNE, slopeSW, slopeSE, ceilNW, ceilNE, ceilSW, ceilSE }
 	public enum DragMode { NONE, XY, X, Y, Z }
 	public enum MoveMode { NONE, DRAG, ROTATE }
 
@@ -146,74 +148,6 @@ public class EditorApplication implements ApplicationListener {
 
 	int lastInputX = -1;
 	int lastInputY = -1;
-
-	private class ControlPointVertex {
-		Tile tile;
-		ControlVertex vertex = ControlVertex.slopeNE;
-
-		public ControlPointVertex(Tile tile, ControlVertex vertex) {
-			this.tile = tile;
-			this.vertex = vertex;
-		}
-	}
-
-	private class ControlPoint {
-		public Vector3 point;
-		public ControlPointType controlPointType;
-
-		public Array<ControlPointVertex> vertices = new Array<ControlPointVertex>();
-
-		public ControlPoint(Vector3 point, ControlPointType type) {
-			this.point = point;
-			controlPointType = type;
-		}
-
-		public ControlPoint(Vector3 point, ControlPointVertex vertex) {
-			this.point = point;
-			controlPointType = ControlPointType.vertex;
-			vertices.add(vertex);
-		}
-
-		public boolean isCeiling() {
-			return controlPointType == ControlPointType.northCeil || controlPointType == ControlPointType.eastCeil || controlPointType == ControlPointType.southCeil || controlPointType == ControlPointType.westCeil;
-		}
-
-		public boolean isFloor() {
-			return controlPointType == ControlPointType.northFloor || controlPointType == ControlPointType.eastFloor || controlPointType == ControlPointType.southFloor || controlPointType == ControlPointType.westFloor;
-		}
-
-		public boolean isNorthCeiling() {
-			return controlPointType == ControlPointType.northCeil || controlPointType == ControlPointType.ceiling;
-		}
-
-		public boolean isSouthCeiling() {
-			return controlPointType == ControlPointType.southCeil || controlPointType == ControlPointType.ceiling;
-		}
-
-		public boolean isEastCeiling() {
-			return controlPointType == ControlPointType.eastCeil || controlPointType == ControlPointType.ceiling;
-		}
-
-		public boolean isWestCeiling() {
-			return controlPointType == ControlPointType.westCeil || controlPointType == ControlPointType.ceiling;
-		}
-
-		public boolean isNorthFloor() {
-			return controlPointType == ControlPointType.northFloor || controlPointType == ControlPointType.floor;
-		}
-
-		public boolean isSouthFloor() {
-			return controlPointType == ControlPointType.southFloor || controlPointType == ControlPointType.floor;
-		}
-
-		public boolean isEastFloor() {
-			return controlPointType == ControlPointType.eastFloor || controlPointType == ControlPointType.floor;
-		}
-
-		public boolean isWestFloor() {
-			return controlPointType == ControlPointType.westFloor || controlPointType == ControlPointType.floor;
-		}
-	}
 
 	private GameInput input;
     public EditorInput editorInput;
