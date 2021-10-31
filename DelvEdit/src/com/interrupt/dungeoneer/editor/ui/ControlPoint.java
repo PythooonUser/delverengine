@@ -16,47 +16,47 @@ public class ControlPoint {
 
     public ControlPoint(Vector3 point, ControlPointVertex vertex) {
         this.point = point;
-        controlPointType = ControlPointType.vertex;
+        controlPointType = ControlPointType.VERTEX;
         vertices.add(vertex);
     }
 
     public boolean isCeiling() {
-        return controlPointType == ControlPointType.northCeil || controlPointType == ControlPointType.eastCeil || controlPointType == ControlPointType.southCeil || controlPointType == ControlPointType.westCeil;
+        return controlPointType == ControlPointType.CEILING_NORTH || controlPointType == ControlPointType.CEILING_EAST || controlPointType == ControlPointType.CEILING_SOUTH || controlPointType == ControlPointType.CEILING_WEST;
     }
 
     public boolean isFloor() {
-        return controlPointType == ControlPointType.northFloor || controlPointType == ControlPointType.eastFloor || controlPointType == ControlPointType.southFloor || controlPointType == ControlPointType.westFloor;
+        return controlPointType == ControlPointType.FLOOR_NORTH || controlPointType == ControlPointType.FLOOR_EAST || controlPointType == ControlPointType.FLOOR_SOUTH || controlPointType == ControlPointType.FLOOR_WEST;
     }
 
     public boolean isNorthCeiling() {
-        return controlPointType == ControlPointType.northCeil || controlPointType == ControlPointType.ceiling;
+        return controlPointType == ControlPointType.CEILING_NORTH || controlPointType == ControlPointType.CEILING;
     }
 
     public boolean isSouthCeiling() {
-        return controlPointType == ControlPointType.southCeil || controlPointType == ControlPointType.ceiling;
+        return controlPointType == ControlPointType.CEILING_SOUTH || controlPointType == ControlPointType.CEILING;
     }
 
     public boolean isEastCeiling() {
-        return controlPointType == ControlPointType.eastCeil || controlPointType == ControlPointType.ceiling;
+        return controlPointType == ControlPointType.CEILING_EAST || controlPointType == ControlPointType.CEILING;
     }
 
     public boolean isWestCeiling() {
-        return controlPointType == ControlPointType.westCeil || controlPointType == ControlPointType.ceiling;
+        return controlPointType == ControlPointType.CEILING_WEST || controlPointType == ControlPointType.CEILING;
     }
 
     public boolean isNorthFloor() {
-        return controlPointType == ControlPointType.northFloor || controlPointType == ControlPointType.floor;
+        return controlPointType == ControlPointType.FLOOR_NORTH || controlPointType == ControlPointType.FLOOR;
     }
 
     public boolean isSouthFloor() {
-        return controlPointType == ControlPointType.southFloor || controlPointType == ControlPointType.floor;
+        return controlPointType == ControlPointType.FLOOR_SOUTH || controlPointType == ControlPointType.FLOOR;
     }
 
     public boolean isEastFloor() {
-        return controlPointType == ControlPointType.eastFloor || controlPointType == ControlPointType.floor;
+        return controlPointType == ControlPointType.FLOOR_EAST || controlPointType == ControlPointType.FLOOR;
     }
 
     public boolean isWestFloor() {
-        return controlPointType == ControlPointType.westFloor || controlPointType == ControlPointType.floor;
+        return controlPointType == ControlPointType.FLOOR_WEST || controlPointType == ControlPointType.FLOOR;
     }
 }

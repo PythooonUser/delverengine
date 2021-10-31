@@ -4,7 +4,7 @@ import com.interrupt.dungeoneer.tiles.Tile;
 
 public class ControlPointVertex {
     public Tile tile;
-    public ControlVertex vertex = ControlVertex.slopeNE;
+    public ControlVertex vertex = ControlVertex.SLOPE_NORTHEAST;
 
     public ControlPointVertex(Tile tile, ControlVertex vertex) {
         this.tile = tile;
