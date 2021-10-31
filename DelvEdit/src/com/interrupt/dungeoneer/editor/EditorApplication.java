@@ -3853,10 +3853,22 @@ public class EditorApplication implements ApplicationListener {
         float xFull = x + (float) width;
         float yMid = y + height / 2f;
         float yFull = y + (float) height;
+        float heightMid = (startTile.ceilHeight - startTile.floorHeight) / 2f + startTile.floorHeight;
 
         // floor and ceiling control points
         addControlPoint(new Vector3(xMid, startTile.floorHeight, yMid), ControlPointType.FLOOR);
         addControlPoint(new Vector3(xMid, startTile.ceilHeight, yMid), ControlPointType.CEILING);
+
+        // side control points
+        Vector3 northSide = new Vector3(xMid, heightMid, y);
+        Vector3 eastSide = new Vector3(xFull, heightMid, yMid);
+        Vector3 southSide = new Vector3(xMid, heightMid, yFull);
+        Vector3 westSide = new Vector3(x, heightMid, yMid);
+
+        addControlPoint(northSide, ControlPointType.NORTH);
+        addControlPoint(eastSide, ControlPointType.EAST);
+        addControlPoint(southSide, ControlPointType.SOUTH);
+        addControlPoint(westSide, ControlPointType.WEST);
     }
 
     private void addControlPoint(Vector3 point, ControlPointType type) {
