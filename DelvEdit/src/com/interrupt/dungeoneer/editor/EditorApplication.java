@@ -40,6 +40,7 @@ import com.interrupt.dungeoneer.editor.selection.TileSelection;
 import com.interrupt.dungeoneer.editor.selection.TileSelectionInfo;
 import com.interrupt.dungeoneer.editor.ui.EditorUi;
 import com.interrupt.dungeoneer.editor.ui.SaveChangesDialog;
+import com.interrupt.dungeoneer.editor.ui.SelectionMode;
 import com.interrupt.dungeoneer.editor.ui.TextureRegionPicker;
 import com.interrupt.dungeoneer.editor.ui.menu.generator.GeneratorInfo;
 import com.interrupt.dungeoneer.editor.utils.LiveReload;
@@ -246,7 +247,7 @@ public class EditorApplication implements ApplicationListener {
 
     private boolean tileDragging = false;
 
-    private boolean vertexSelectionMode = false;
+    private SelectionMode selectionMode = SelectionMode.EDGE;
 
     public float time = 0;
 
@@ -982,7 +983,7 @@ public class EditorApplication implements ApplicationListener {
 			// init the control point list if needed
 			if(controlPoints.size == 0) {
 
-				if(!vertexSelectionMode) {
+				if(selectionMode == SelectionMode.EDGE) {
 					// floor and ceiling control points
 					controlPoints.add(new ControlPoint(new Vector3(selX + (selWidth / 2f), startTile.floorHeight, selY + (selHeight / 2f)), ControlPointType.floor));
 					controlPoints.add(new ControlPoint(new Vector3(selX + (selWidth / 2f), startTile.ceilHeight, selY + (selHeight / 2f)), ControlPointType.ceiling));
@@ -1009,7 +1010,7 @@ public class EditorApplication implements ApplicationListener {
 					controlPoints.add(new ControlPoint(westEdgeFloor, ControlPointType.westFloor));
 					controlPoints.add(new ControlPoint(eastEdgeFloor, ControlPointType.eastFloor));
 				}
-				else {
+				else if (selectionMode == SelectionMode.VERTEX) {
                     for (TileSelectionInfo info : Editor.selection.tiles) {
                         Tile current = info.tile;
 
@@ -1067,7 +1068,7 @@ public class EditorApplication implements ApplicationListener {
 			}
 
 			// draw lines
-			if(!vertexSelectionMode) {
+			if(selectionMode == SelectionMode.EDGE) {
 				for(int xx = selX; xx < selX + selWidth; xx++) {
 					Tile north = level.getTile(xx, selY);
 					Tile south = level.getTile(xx, selY + selHeight - 1);
@@ -2186,20 +2187,28 @@ public class EditorApplication implements ApplicationListener {
         refreshLights();
     }
 
-    public void setPlaneHeightMode() {
-        vertexSelectionMode = false;
-        controlPoints.clear();
-    }
+	public void setSelectionMode(SelectionMode selectionMode) {
+		this.selectionMode = selectionMode;
+		controlPoints.clear();
+	}
 
-    public void setVertexHeightMode() {
-        vertexSelectionMode = true;
-        controlPoints.clear();
-    }
+	public void toggleSelectionMode() {
+		switch (selectionMode) {
+			case VERTEX:
+				selectionMode = SelectionMode.EDGE;
+				break;
+			case EDGE:
+				selectionMode = SelectionMode.FACE;
+				break;
+			case FACE:
+				selectionMode = SelectionMode.VERTEX;
+				break;
+			default:
+				break;
+		}
 
-    public void toggleVertexHeightMode() {
-        vertexSelectionMode = !vertexSelectionMode;
-        controlPoints.clear();
-    }
+		controlPoints.clear();
+	}
 
 	public void testLevel(boolean useCameraPosition) {
 		editorInput.resetKeys();
