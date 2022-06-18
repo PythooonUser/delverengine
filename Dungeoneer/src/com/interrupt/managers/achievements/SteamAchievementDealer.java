@@ -1,15 +1,22 @@
 package com.interrupt.managers.achievements;
 
 import com.interrupt.api.steam.SteamApi;
+import com.interrupt.dungeoneer.achievements.Achievement;
+import com.interrupt.dungeoneer.achievements.ProgressionAchievement;
 
 public class SteamAchievementDealer implements AchievementDealerInterface {
     @Override
-    public void achieve(String achievementName) {
-        SteamApi.api.achieve(achievementName);
+    public void achieve(Achievement achievement) {
+        SteamApi.api.achieve(achievement.identifier);
     }
 
     @Override
-    public void achieve(String achievementName, int currentProgress, int maxProgress) {
-        SteamApi.api.achieve(achievementName, currentProgress, maxProgress);
+    public void achieve(ProgressionAchievement achievement, int currentProgress) {
+        SteamApi.api.achieve(achievement.identifier, currentProgress, achievement.maxProgress);
+    }
+
+    @Override
+    public void achieve(String name) {
+        SteamApi.api.achieve(name);
     }
 }

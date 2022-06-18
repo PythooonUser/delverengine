@@ -1,13 +1,14 @@
 package com.interrupt.helpers;
 
 import com.badlogic.gdx.Gdx;
+import com.interrupt.dungeoneer.achievements.AchievementTriggerEvent;
+import com.interrupt.dungeoneer.achievements.AchievementTriggerType;
 import com.interrupt.dungeoneer.entities.Entity;
 import com.interrupt.dungeoneer.entities.Item;
 import com.interrupt.dungeoneer.entities.Monster;
 import com.interrupt.dungeoneer.game.Game;
 
 public class PlayerHistory {
-
 	public int monstersKilled = 0;
 	public int foodEaten = 0;
 	public int damageTaken = 0;
@@ -26,74 +27,72 @@ public class PlayerHistory {
 		Gdx.app.log("PlayerHistory", "Killed a monster");
 		monstersKilled++;
 
-		if(monstersKilled > 150) {
-			Game.achievementManager.achievementDealer.achieve("RUN_MONSTERS");
-		}
+        Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.MONSTER_KILLED, monstersKilled)
+        );
 	}
 
 	public void ateFood(Item item) {
 		Gdx.app.log("PlayerHistory", "Ate food");
 		foodEaten++;
 
-		if(foodEaten > 40) {
-			Game.achievementManager.achievementDealer.achieve("RUN_FOOD");
-		}
+        Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.FOOD_EATEN, foodEaten)
+        );
 	}
 
 	public void drankPotion(Item item) {
 		Gdx.app.log("PlayerHistory", "Drank a potion");
 		potionsDrank++;
 
-		if(potionsDrank >= 15) {
-			Game.achievementManager.achievementDealer.achieve("RUN_POTIONS");
-		}
+        Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.POTION_DRANK, potionsDrank)
+        );
 	}
 
 	public void usedScroll(Item item) {
 		Gdx.app.log("PlayerHistory", "Used a scroll");
 		scrollsUsed++;
 
-		if(scrollsUsed >= 10) {
-			Game.achievementManager.achievementDealer.achieve("RUN_SCROLLS");
-		}
+        Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.SCROLL_USED, scrollsUsed)
+        );
 	}
 
 	public void tookDamage(int damage) {
 		Gdx.app.log("PlayerHistory", "Took damage");
 		damageTaken += damage;
 
-		if(Game.instance != null && Game.instance.player != null && Game.instance.player.isAlive()) {
-			if (damageTaken >= 400) {
-				Game.achievementManager.achievementDealer.achieve("RUN_DAMAGE_TAKEN");
-			}
-		}
+        Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.DAMAGE_TAKEN, damageTaken)
+        );
 	}
 
 	public void usedWand(Item item) {
 		Gdx.app.log("PlayerHistory", "Used a wand");
 		wandsUsed++;
 
-		if(wandsUsed >= 300) {
-			Game.achievementManager.achievementDealer.achieve("RUN_WANDS");
-		}
+        Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.WAND_USED, wandsUsed)
+        );
 	}
 
 	public void activatedTrap(Entity trap) {
 		Gdx.app.log("PlayerHistory", "Tripped a trap");
 		trapsActivated++;
 
-		if(trapsActivated >= 10) {
-			Game.achievementManager.achievementDealer.achieve("RUN_TRAPS");
-		}
+        Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.TRAP_ACTIVATED, trapsActivated)
+        );
 	}
 
 	public void teleported() {
 		Gdx.app.log("PlayerHistory", "Was teleported");
 		timesTeleported++;
 
-		if(timesTeleported >= 10) {
-			Game.achievementManager.achievementDealer.achieve("RUN_TELEPORTED");
-		}
+		Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.TELEPORTED, timesTeleported)
+        );
 	}
 
 	public void poisoned() {
@@ -101,26 +100,26 @@ public class PlayerHistory {
 		Gdx.app.log("PlayerHistory", "Was poisoned");
 		timesPoisoned++;
 
-		if(timesPoisoned >= 10) {
-			Game.achievementManager.achievementDealer.achieve("RUN_POISONED");
-		}
+		Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.POISONED, timesPoisoned)
+        );
 	}
 
 	public void identified(Item item) {
 		Gdx.app.log("PlayerHistory", "Identified an item");
 		thingsIdentified++;
 
-		if(thingsIdentified >= 5) {
-			Game.achievementManager.achievementDealer.achieve("RUN_IDENTIFIED");
-		}
+        Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.IDENTIFIED, thingsIdentified)
+        );
 	}
 
 	public void foundSecret() {
 		Gdx.app.log("PlayerHistory", "Found a secret");
 		secretsFound++;
 
-		if(secretsFound >= 5) {
-			Game.achievementManager.achievementDealer.achieve("RUN_SECRETS");
-		}
+		Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.SECRET_FOUND, secretsFound)
+        );
 	}
 }

@@ -1,5 +1,140 @@
 {
     "achievementDealer": {
         "class": "com.interrupt.managers.achievements.NullAchievementDealer"
-    }
+    },
+    "achievements": [
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_MONSTERS",
+            "title": "achievement.monstersKilled.title",
+            "description": "achievement.monstersKilled.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "MONSTER_KILLED",
+                "conditionType": "GREATER",
+                "value": 150
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_FOOD",
+            "title": "achievement.foodEaten.title",
+            "description": "achievement.foodEaten.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "FOOD_EATEN",
+                "conditionType": "GREATER",
+                "value": 40
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_POTIONS",
+            "title": "achievement.potionsDrank.title",
+            "description": "achievement.potionsDrank.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "POTION_DRANK",
+                "conditionType": "GREATER_EQUAL",
+                "value": 15
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_SCROLLS",
+            "title": "achievement.scrollsUsed.title",
+            "description": "achievement.scrollsUsed.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "SCROLL_USED",
+                "conditionType": "GREATER_EQUAL",
+                "value": 10
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_WANDS",
+            "title": "achievement.wandsUsed.title",
+            "description": "achievement.wandsUsed.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "WAND_USED",
+                "conditionType": "GREATER_EQUAL",
+                "value": 300
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_TRAPS",
+            "title": "achievement.trapsActivated.title",
+            "description": "achievement.trapsActivated.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "TRAP_ACTIVATED",
+                "conditionType": "GREATER_EQUAL",
+                "value": 10
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_TELEPORTED",
+            "title": "achievement.timesTeleported.title",
+            "description": "achievement.timesTeleported.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "TELEPORTED",
+                "conditionType": "GREATER_EQUAL",
+                "value": 10
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_POISONED",
+            "title": "achievement.timesPoisoned.title",
+            "description": "achievement.timesPoisoned.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "POISONED",
+                "conditionType": "GREATER_EQUAL",
+                "value": 10
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_IDENTIFIED",
+            "title": "achievement.thingsIdentified.title",
+            "description": "achievement.thingsIdentified.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "IDENTIFIED",
+                "conditionType": "GREATER_EQUAL",
+                "value": 5
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_SECRETS",
+            "title": "achievement.secretsFound.title",
+            "description": "achievement.secretsFound.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "SECRET_FOUND",
+                "conditionType": "GREATER_EQUAL",
+                "value": 5
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_DAMAGE_TAKEN",
+            "title": "achievement.damageTaken.title",
+            "description": "achievement.damageTaken.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "DAMAGE_TAKEN",
+                "conditionType": "GREATER_EQUAL",
+                "value": 400,
+                "playerNeedsToBeAlive": true
+            }
+        }
+    ]
 }
