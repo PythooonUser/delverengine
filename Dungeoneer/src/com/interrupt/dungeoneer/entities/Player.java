@@ -11,8 +11,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntArray;
-import com.interrupt.api.steam.SteamApi;
 import com.interrupt.dungeoneer.Audio;
 import com.interrupt.dungeoneer.GameInput;
 import com.interrupt.dungeoneer.GameManager;
@@ -40,7 +38,6 @@ import com.interrupt.dungeoneer.statuseffects.*;
 import com.interrupt.dungeoneer.tiles.ExitTile;
 import com.interrupt.dungeoneer.tiles.Tile;
 import com.interrupt.helpers.PlayerHistory;
-import com.interrupt.managers.HUDManager;
 import com.interrupt.managers.StringManager;
 
 import java.text.MessageFormat;
@@ -279,7 +276,7 @@ public class Player extends Actor {
 			Game.hudManager.quickSlots.refresh();
 
 			if(inventorySize - hotbarSize >= 35) {
-				SteamApi.api.achieve("SQUID3");
+				Game.achievementManager.achievementDealer.achieve("SQUID3");
 			}
 		}
 	}
@@ -297,7 +294,7 @@ public class Player extends Actor {
 			Game.hudManager.quickSlots.refresh();
 
 			if(hotbarSize >= 9) {
-				SteamApi.api.achieve("SQUID4");
+				Game.achievementManager.achievementDealer.achieve("SQUID4");
 			}
 		}
 	}

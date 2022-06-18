@@ -3,17 +3,14 @@ package com.interrupt.dungeoneer.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
-import com.interrupt.api.steam.SteamApi;
 import com.interrupt.dungeoneer.Audio;
 import com.interrupt.dungeoneer.GameApplication;
 import com.interrupt.dungeoneer.GameManager;
@@ -24,7 +21,7 @@ import com.interrupt.dungeoneer.ui.UiSkin;
 import com.interrupt.managers.StringManager;
 
 public class GameOverScreen extends StatsScreen {
-	
+
 	protected GameManager dungeoneerComponent;
 	private int curWidth;
     private int curHeight;
@@ -33,7 +30,7 @@ public class GameOverScreen extends StatsScreen {
     protected float tickTime = 0f;
     protected float shownTime = 0;
     protected float uiScale = 3.75f;
-    
+
     private int gameOverProgress = 0;
     private float gameOverTimer = 0;
 
@@ -49,7 +46,7 @@ public class GameOverScreen extends StatsScreen {
     private boolean firstDeath = false;
 
     private boolean dealtAchievements = false;
-    
+
     private String[] winTexts = {
             StringManager.get("screens.GameOverScreen.win_text_0"),
             StringManager.get("screens.GameOverScreen.win_text_1"),
@@ -64,10 +61,10 @@ public class GameOverScreen extends StatsScreen {
     private String pickedWinText = "";
 
     public GameOverScreen() { }
-	
+
 	public GameOverScreen(GameManager dungeoneerComponent) {
 		this.dungeoneerComponent = dungeoneerComponent;
-		
+
 		skin = UiSkin.getSkin();
 		ui = new Stage(getViewport(Gdx.graphics.getWidth() / uiScale, Gdx.graphics.getHeight() / uiScale));
 
@@ -96,7 +93,7 @@ public class GameOverScreen extends StatsScreen {
     @Override
     public void draw(float delta) {
 		GlRenderer renderer = GameManager.renderer;
-		
+
 		if(gameOver) {
             backgroundColor.set(0.6f, 0, 0, 1);
 		} else {
@@ -143,7 +140,7 @@ public class GameOverScreen extends StatsScreen {
 		}
 
 		renderer.uiBatch.end();
-		
+
 		if(gameOverProgress >= 0) {
 			ui.draw();
 		}
@@ -227,7 +224,7 @@ public class GameOverScreen extends StatsScreen {
 
 		Gdx.input.setCursorCatched(true);
 		running = true;
-		
+
 		gameOverProgress = 0;
         statNumber = 0;
 
@@ -280,7 +277,7 @@ public class GameOverScreen extends StatsScreen {
 
         ui.act(0.0001f);
     }
-	
+
 	public void makeStats(Integer progress, boolean doFade) {
 	    if(firstDeath) {
 	        fadingOut = true;
@@ -298,15 +295,15 @@ public class GameOverScreen extends StatsScreen {
         dealtAchievements = true;
 
         if(gameOver) {
-            SteamApi.api.achieve("DIED");
+            Game.achievementManager.achievementDealer.achieve("DIED");
         }
         else {
-            SteamApi.api.achieve("WON");
+            Game.achievementManager.achievementDealer.achieve("WON");
         }
 
         int goldThisRun = Game.instance.player.gold - Game.instance.progression.goldAtStartOfRun;
         if(goldThisRun > 300) {
-            SteamApi.api.achieve("RUN_GOLD");
+            Game.achievementManager.achievementDealer.achieve("RUN_GOLD");
         }
     }
 
