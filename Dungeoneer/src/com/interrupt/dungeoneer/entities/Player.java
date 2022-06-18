@@ -275,9 +275,7 @@ public class Player extends Actor {
 			Game.hudManager.backpack.refresh();
 			Game.hudManager.quickSlots.refresh();
 
-			if(inventorySize - hotbarSize >= 35) {
-				Game.achievementManager.achievementDealer.achieve("SQUID3");
-			}
+			Game.instance.player.history.addedInventorySlot();
 		}
 	}
 
@@ -293,9 +291,7 @@ public class Player extends Actor {
 			Game.hudManager.backpack.refresh();
 			Game.hudManager.quickSlots.refresh();
 
-			if(hotbarSize >= 9) {
-				Game.achievementManager.achievementDealer.achieve("SQUID4");
-			}
+			Game.instance.player.history.addedHotbarSlot();
 		}
 	}
 

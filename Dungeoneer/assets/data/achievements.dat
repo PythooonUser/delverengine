@@ -147,6 +147,30 @@
                 "conditionType": "GREATER",
                 "value": 300
             }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "SQUID3",
+            "title": "achievement.inventorySlotAdded.title",
+            "description": "achievement.inventorySlotAdded.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "INVENTORY_SLOT_ADDED",
+                "conditionType": "GREATER_EQUAL",
+                "value": 17
+            }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "SQUID4",
+            "title": "achievement.hotbarSlotAdded.title",
+            "description": "achievement.hotbarSlotAdded.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "HOTBAR_SLOT_ADDED",
+                "conditionType": "GREATER_EQUAL",
+                "value": 4
+            }
         }
     ]
 }
