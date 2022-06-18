@@ -15,6 +15,7 @@ import com.interrupt.dungeoneer.gfx.animation.lerp3d.LerpedAnimationManager;
 import com.interrupt.dungeoneer.gfx.shaders.ShaderData;
 import com.interrupt.dungeoneer.scripting.ScriptingApi;
 import com.interrupt.managers.*;
+import com.interrupt.managers.achievements.AchievementManager;
 import com.interrupt.utils.JsonUtil;
 import com.interrupt.utils.Logger;
 
@@ -22,6 +23,7 @@ import java.util.HashMap;
 
 public class ModManager {
     private static final String DATA_HUD_DAT = "/data/hud.dat";
+    private static final String DATA_ACHIEVEMENTS_DAT = "/data/achievements.dat";
 
     private transient Array<String> allMods = new Array<String>();
 
@@ -353,6 +355,25 @@ public class ModManager {
         }
 
         return hudManager;
+    }
+
+    public AchievementManager loadAchievementManager() {
+        AchievementManager manager = new AchievementManager();
+
+        for (String path : modsFound) {
+            try {
+                FileHandle modFile = Game.getInternal(path + DATA_ACHIEVEMENTS_DAT);
+                if (modFile.exists() && !pathIsExcluded(path + DATA_ACHIEVEMENTS_DAT)) {
+                    AchievementManager modData = JsonUtil.fromJson(AchievementManager.class, modFile);
+                    manager.merge(modData);
+                }
+            } catch (Exception ex) {
+                Gdx.app.error("Delver", "Error loading mod file " + path + DATA_ACHIEVEMENTS_DAT);
+                Logger.logExceptionToFile(ex);
+            }
+        }
+
+        return manager;
     }
 
     public GenTheme loadTheme(String filename) {

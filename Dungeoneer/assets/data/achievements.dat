@@ -1,0 +1,5 @@
+{
+    "achievementDealer": {
+        "class": "com.interrupt.managers.achievements.NullAchievementDealer"
+    }
+}
