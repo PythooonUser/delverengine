@@ -13,4 +13,6 @@ public enum AchievementTriggerType {
     TRAP_ACTIVATED,
     WAND_USED,
     GOLD_TAKEN,
+    INVENTORY_SLOT_ADDED,
+    HOTBAR_SLOT_ADDED,
 }

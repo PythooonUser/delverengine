@@ -21,6 +21,8 @@ public class PlayerHistory {
 	public int thingsIdentified = 0;
 	public int secretsFound = 0;
 	public int goldTaken = 0;
+    public int inventorySlotsAdded = 0;
+    public int hotbarSlotsAdded = 0;
 
 	public PlayerHistory() { }
 
@@ -130,6 +132,24 @@ public class PlayerHistory {
 
 		Game.achievementManager.triggerAchievement(
             new AchievementTriggerEvent(AchievementTriggerType.GOLD_TAKEN, goldTaken)
+        );
+	}
+
+    public void addedInventorySlot() {
+		Gdx.app.log("PlayerHistory", "Added inventory slot");
+		inventorySlotsAdded++;
+
+		Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.INVENTORY_SLOT_ADDED, inventorySlotsAdded)
+        );
+	}
+
+    public void addedHotbarSlot() {
+		Gdx.app.log("PlayerHistory", "Added hotbar slot");
+		hotbarSlotsAdded++;
+
+		Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.HOTBAR_SLOT_ADDED, hotbarSlotsAdded)
         );
 	}
 }
