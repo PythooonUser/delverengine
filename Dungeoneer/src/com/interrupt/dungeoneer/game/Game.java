@@ -38,6 +38,7 @@ import com.interrupt.managers.HUDManager;
 import com.interrupt.managers.ItemManager;
 import com.interrupt.managers.MonsterManager;
 import com.interrupt.managers.StringManager;
+import com.interrupt.managers.achievements.AchievementManager;
 import com.interrupt.utils.JsonUtil;
 import com.interrupt.utils.Logger;
 import com.interrupt.utils.OSUtils;
@@ -84,6 +85,7 @@ public class Game {
 	public MonsterManager monsterManager;
 	public EntityManager entityManager;
     public static HUDManager hudManager;
+    public static AchievementManager achievementManager;
 
 	public static boolean isMobile = false;
 	public static boolean isDebugMode = false;
@@ -171,6 +173,7 @@ public class Game {
 		EntityManager.setSingleton(entityManager);
 
         loadHUDManager(modManager);
+        loadAchievementManager(modManager);
 	}
 
 	/** Create game for editor usage. */
@@ -1547,6 +1550,18 @@ public class Game {
         if (null == hudManager) {
             hudManager = new HUDManager();
             ShowMessage(MessageFormat.format(StringManager.get("game.Game.errorLoadingDataText"), "HUD.DAT"), 2, 1f);
+        }
+    }
+
+    private static void loadAchievementManager(ModManager modManager) {
+        achievementManager = modManager.loadAchievementManager();
+
+        if (null == achievementManager) {
+            achievementManager = new AchievementManager();
+            ShowMessage(
+                    MessageFormat.format(StringManager.get("game.Game.errorLoadingDataText"), "ACHIEVEMENTS.DAT"),
+                    2,
+                    1f);
         }
     }
 }
