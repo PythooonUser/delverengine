@@ -16,19 +16,17 @@ public class StatsScreen extends BaseScreen {
     public StatsScreen() { }
 
     Color statLabelColor = new Color(0.6f, 0, 0, 1);
-	
+
 	public void makeStats(Integer progress, boolean doFade) {
 		ui.clear();
-		
+
 		// display some stats
 		Table mainTable = new Table();
 		mainTable.setFillParent(true);
 
-		int goldThisRun = Game.instance.player.gold - Game.instance.progression.goldAtStartOfRun;
-		
 		Table innerTable = new Table();
 		if(progress > 0) makeStat(innerTable, StringManager.get("screens.GameOverScreen.playtimeStatLabel"), Game.instance.player.getPlaytime(), doFade);
-		if(progress > 1) makeStat(innerTable, StringManager.get("screens.GameOverScreen.goldStatLabel"), goldThisRun, doFade);
+		if(progress > 1) makeStat(innerTable, StringManager.get("screens.GameOverScreen.goldStatLabel"), Game.instance.player.history.goldTaken, doFade);
 		if(progress > 2) makeStat(innerTable, StringManager.get("screens.GameOverScreen.killsStatLabel"), Game.instance.player.history.monstersKilled, doFade);
 		if(progress > 3) makeStat(innerTable, StringManager.get("screens.GameOverScreen.damageStatLabel"), Game.instance.player.history.damageTaken, doFade);
 		if(progress > 4) makeStat(innerTable, StringManager.get("screens.GameOverScreen.potionsStatLabel"), Game.instance.player.history.potionsDrank, doFade);
@@ -36,7 +34,7 @@ public class StatsScreen extends BaseScreen {
 		if(progress > 6) makeStat(innerTable, StringManager.get("screens.GameOverScreen.scrollsStatLabel"), Game.instance.player.history.scrollsUsed, doFade);
 		if(progress > 7) makeStat(innerTable, StringManager.get("screens.GameOverScreen.trapsStatLabel"), Game.instance.player.history.trapsActivated, doFade);
         if(progress > 8) makeStat(innerTable, StringManager.get("screens.GameOverScreen.secretsStatLabel"), Game.instance.player.history.secretsFound, doFade);
-		
+
 		mainTable.add(innerTable);
 		ui.addActor(mainTable);
         ui.act(0.0001f);

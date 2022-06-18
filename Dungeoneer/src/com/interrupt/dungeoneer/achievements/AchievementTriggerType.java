@@ -12,4 +12,5 @@ public enum AchievementTriggerType {
     TELEPORTED,
     TRAP_ACTIVATED,
     WAND_USED,
+    GOLD_TAKEN,
 }

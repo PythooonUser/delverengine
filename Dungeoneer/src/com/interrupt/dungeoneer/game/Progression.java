@@ -1,9 +1,7 @@
 package com.interrupt.dungeoneer.game;
 
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
-import com.interrupt.api.steam.workshop.WorkshopModData;
 import com.interrupt.dungeoneer.entities.Item;
 
 import java.util.HashMap;
@@ -15,6 +13,7 @@ public class Progression {
 	public int messagesFound = 0;
 	public boolean won = false;
 
+    /** @deprecated */
 	public int goldAtStartOfRun = 0;
 
     public int wins = 0;
@@ -47,7 +46,6 @@ public class Progression {
 		dungeonAreasSeen.clear();
 		uniqueItemsSpawned.clear();
 		untilDeathProgressionTriggers.clear();
-		goldAtStartOfRun = gold;
 	}
 
 	public void trackMods() {

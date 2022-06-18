@@ -2577,4 +2577,9 @@ public class Player extends Actor {
 				itm.drawable.refresh();
 		}
     }
+
+    public void addGold(int amount) {
+        gold += amount;
+        history.tookGold(amount);
+    }
 }
