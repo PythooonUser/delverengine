@@ -1,32 +1,29 @@
 package com.interrupt.dungeoneer.entities.triggers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.interrupt.api.steam.SteamApi;
 import com.interrupt.dungeoneer.Art;
 import com.interrupt.dungeoneer.annotations.EditorProperty;
 import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.dungeoneer.game.Level;
-import com.interrupt.dungeoneer.game.Progression;
 import com.interrupt.dungeoneer.overlays.MessageOverlay;
 import com.interrupt.dungeoneer.overlays.OverlayManager;
 
 public class TriggeredMessage extends Trigger {
-	
+
 	@EditorProperty
 	public String messageFile = "none.dat";
 
 	@EditorProperty
 	public String progressionKey = null;
-	
+
 	@EditorProperty
 	public Float time = 5f;
-	
+
 	@EditorProperty
 	public Float size = 1f;
 
@@ -72,7 +69,7 @@ public class TriggeredMessage extends Trigger {
 
 		super.init(level, source);
 	}
-	
+
 	@Override
 	public void doTriggerEvent(String value) {
 
@@ -87,7 +84,7 @@ public class TriggeredMessage extends Trigger {
 		}
 
 		if(messageFile != null && messageFile.equals("campfireguy5.dat")) {
-			SteamApi.api.achieve("OLDGUY");
+			Game.achievementManager.achievementDealer.achieve("OLDGUY");
 		}
 
 		// Set a background, if one was given
@@ -111,7 +108,7 @@ public class TriggeredMessage extends Trigger {
 			overlay.pausesGame = pausesGame;
 			OverlayManager.instance.push(overlay);
 		}
-		
+
 		super.doTriggerEvent(value);
 	}
 }
