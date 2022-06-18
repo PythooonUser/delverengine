@@ -135,6 +135,18 @@
                 "value": 400,
                 "playerNeedsToBeAlive": true
             }
+        },
+        {
+            "class": "com.interrupt.dungeoneer.achievements.Achievement",
+            "identifier": "RUN_GOLD",
+            "title": "achievement.goldTaken.title",
+            "description": "achievement.goldTaken.description",
+            "trigger": {
+                "class": "com.interrupt.dungeoneer.achievements.AchievementTrigger",
+                "triggerType": "GOLD_TAKEN",
+                "conditionType": "GREATER",
+                "value": 300
+            }
         }
     ]
 }

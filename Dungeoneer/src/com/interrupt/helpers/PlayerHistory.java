@@ -20,6 +20,7 @@ public class PlayerHistory {
 	public int timesPoisoned = 0;
 	public int thingsIdentified = 0;
 	public int secretsFound = 0;
+	public int goldTaken = 0;
 
 	public PlayerHistory() { }
 
@@ -120,6 +121,15 @@ public class PlayerHistory {
 
 		Game.achievementManager.triggerAchievement(
             new AchievementTriggerEvent(AchievementTriggerType.SECRET_FOUND, secretsFound)
+        );
+	}
+
+	public void tookGold(int amount) {
+		Gdx.app.log("PlayerHistory", "Took gold");
+		goldTaken += amount;
+
+		Game.achievementManager.triggerAchievement(
+            new AchievementTriggerEvent(AchievementTriggerType.GOLD_TAKEN, goldTaken)
         );
 	}
 }
