@@ -2,6 +2,7 @@ package com.interrupt.dungeoneer.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.interrupt.dungeoneer.editor.file.SaveAdapter;
+import com.interrupt.dungeoneer.editor.ui.SelectionMode;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,9 +20,10 @@ public class EditorActions {
     public ActionListener carveAction;
     public ActionListener paintAction;
     public ActionListener deleteAction;
-    public ActionListener planeHeightAction;
-    public ActionListener vertexHeightAction;
-    public ActionListener vertexToggleAction;
+    public ActionListener setVertexSelectionModeAction;
+    public ActionListener setEdgeSelectionModeAction;
+    public ActionListener setFaceSelectionModeAction;
+    public ActionListener toggleSelectionModeAction;
     public ActionListener undoAction;
     public ActionListener redoAction;
     public ActionListener toggleGizmosAction;
@@ -142,26 +144,10 @@ public class EditorActions {
             }
         };
 
-        planeHeightAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Editor.app.setPlaneHeightMode();
-            }
-        };
-
-        vertexHeightAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Editor.app.setVertexHeightMode();
-            }
-        };
-
-        vertexToggleAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Editor.app.toggleVertexHeightMode();
-            }
-        };
+        setVertexSelectionModeAction = actionEvent -> Editor.app.setSelectionMode(SelectionMode.VERTEX);
+        setEdgeSelectionModeAction = actionEvent -> Editor.app.setSelectionMode(SelectionMode.EDGE);
+        setFaceSelectionModeAction = actionEvent -> Editor.app.setSelectionMode(SelectionMode.FACE);
+        toggleSelectionModeAction = actionEvent -> Editor.app.toggleSelectionMode();
 
         undoAction = new ActionListener() {
             @Override
