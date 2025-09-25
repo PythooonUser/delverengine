@@ -3,6 +3,7 @@ package com.interrupt.dungeoneer.overlays;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -57,7 +58,7 @@ public class OptionsGraphicsOverlay extends WindowOverlay {
         Options.loadOptions();
 
         if(Gdx.app.getType() == Application.ApplicationType.Android)
-            Gdx.input.setCatchBackKey(true);
+            Gdx.input.setCatchKey(Keys.BACK, true);
 
         skin = UiSkin.getSkin();
 

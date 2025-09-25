@@ -46,7 +46,7 @@ public class Text extends DirectionalEntity {
             attached.clear(); // The old text glyphs were attached sprites, so clear the attached entity list.
 
             GlyphLayout bounds = FontBounds.GetBounds(GameManager.renderer.font, text);
-            Vector2 adjustment = Vector2.X.cpy().rotate(-rotation.z);
+            Vector2 adjustment = Vector2.X.cpy().rotateDeg(-rotation.z);
 
             x += adjustment.x * bounds.width / 2.0 * scale * 0.025f; // Correct for left-origin positioning.
             y += adjustment.y * bounds.width / 2.0 * scale * 0.025f;

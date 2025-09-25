@@ -24,7 +24,7 @@ public class ImpulseAction extends AnimationAction {
 		dir = dir.nor();
 		
 		Vector2 rotDir = new Vector2(impulseVector.x, impulseVector.y);
-		rotDir.rotate(dir.angle());
+		rotDir.rotateDeg(dir.angle());
 		
 		instigator.xa += rotDir.x;
 		instigator.ya += rotDir.y;

@@ -26,7 +26,7 @@ public class SpawnAnimationAction extends AnimationAction {
 			dir = dir.nor();
 			
 			Vector2 rotDir = new Vector2(spawnOffset.x, spawnOffset.y);
-			rotDir.rotate(dir.angle());
+			rotDir.rotateDeg(dir.angle());
 			
 			spawns.x = instigator.x + rotDir.x;
 			spawns.y = instigator.y + rotDir.y;

@@ -2,18 +2,14 @@ package com.interrupt.dungeoneer.gfx.shaders;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ArrayMap;
-import com.badlogic.gdx.utils.FloatArray;
 import com.interrupt.dungeoneer.Art;
-import com.interrupt.dungeoneer.GameApplication;
 import com.interrupt.dungeoneer.GameManager;
-import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.dungeoneer.gfx.GlRenderer;
 
 public class ShaderInfo {
@@ -158,7 +154,7 @@ public class ShaderInfo {
 
 		if(!hasBegun) {
 			hasBegun = true;
-			shader.begin();
+			shader.bind();
 		}
 
 		if(projectionView != null) shader.setUniformMatrix(u_projectionViewMatrix, projectionView);
@@ -193,7 +189,6 @@ public class ShaderInfo {
 	
 	public void end() {
 		hasBegun = false;
-		shader.end();
 	}
 
 	public void updateLighting() {

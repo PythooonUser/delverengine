@@ -47,7 +47,7 @@ public class GizmoProvider {
                 gizmoClass = EntityGizmo.class;
             }
 
-            return (Gizmo) gizmoClass.newInstance();
+            return (Gizmo) gizmoClass.getDeclaredConstructor().newInstance();
         }
         catch (Exception ignored) {}
 

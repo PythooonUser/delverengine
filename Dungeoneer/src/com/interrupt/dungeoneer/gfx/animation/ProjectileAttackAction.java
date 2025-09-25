@@ -76,7 +76,7 @@ public class ProjectileAttackAction extends AnimationAction {
 				// offset projectile based on the rotation
 				Vector2 dirToPlayer2d = workVector2d_1.set(dirToPlayer.x, dirToPlayer.y);
 				Vector2 spawnOffset = workVector2d_2.set(projectileOffset.x, projectileOffset.y);
-				spawnOffset.rotate(dirToPlayer2d.angle());
+				spawnOffset.rotateDeg(dirToPlayer2d.angle());
 
 				pCopy.x += spawnOffset.x;
 				pCopy.y += spawnOffset.y;
@@ -89,7 +89,7 @@ public class ProjectileAttackAction extends AnimationAction {
 
 				// apply spread, if needed
 				Vector2 rightHandDirection2d = workVector2d_2.set(0.0f, 1.f);
-				rightHandDirection2d.rotate(dirToPlayer2d.angle());
+				rightHandDirection2d.rotateDeg(dirToPlayer2d.angle());
 				Vector3 rightHandDirection = workVector3d_2.set(rightHandDirection2d.x, rightHandDirection2d.y, 0f);
 
 				// offset for spread if needed
