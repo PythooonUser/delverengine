@@ -1,6 +1,5 @@
 package com.interrupt.dungeoneer.game;
 
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -9,7 +8,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.interrupt.dungeoneer.GameManager;
 import com.interrupt.dungeoneer.editor.EditorMarker;
 import com.interrupt.dungeoneer.entities.*;
-import com.interrupt.dungeoneer.game.terrain.threading.OverworldGenerationThread;
+import com.interrupt.dungeoneer.game.terrain.threading.OverworldGenerationRunnable;
 import com.interrupt.dungeoneer.generator.DungeonGenerator;
 import com.interrupt.dungeoneer.generator.GenInfo;
 import com.interrupt.dungeoneer.generator.GenInfo.Markers;
@@ -51,6 +50,10 @@ public class OverworldChunk implements Pool.Poolable {
 	public boolean wasCreated = false;
 	public boolean isDirty = false;
 
+	// bumped every time the tiles are regenerated, so a queued publish can tell that its
+	// vertices belong to a tile set this chunk no longer has
+	public transient int generation = 0;
+
 	Random r = null;
 
 	private static float SkyHeight = 100;
@@ -59,7 +62,7 @@ public class OverworldChunk implements Pool.Poolable {
 
 	// threading!
 	private transient ThreadSafeLevelSerializer serializer = new ThreadSafeLevelSerializer();
-	private transient OverworldGenerationThread generationRunnable = new OverworldGenerationThread();
+	private transient OverworldGenerationRunnable generationRunnable = new OverworldGenerationRunnable();
 	private transient TesselationThreadRunnable tesselationRunnable = new TesselationThreadRunnable();
 
 	public OverworldChunk(int width, int height) {
@@ -78,18 +81,15 @@ public class OverworldChunk implements Pool.Poolable {
 		}
 	}
 
-	public void generateOnThread(OverworldLevel level) {
-		generationRunnable.init(this, level, true);
-		Game.threadPool.submit(generationRunnable);
-	}
-
 	public void generateOnThisThread(OverworldLevel level) {
-		generationRunnable.init(this, level, false);
+		generationRunnable.init(this, level);
 		generationRunnable.run();
 	}
 
 	public void Init(OverworldLevel level) {
 		needsInitializing = false;
+		generation++;
+
 		long seed = xChunk * 123456 + yChunk * 352525;
 		seed += level.seed / 2;
 		r = new Random(seed);
@@ -710,13 +710,8 @@ public class OverworldChunk implements Pool.Poolable {
 
 			GameManager.renderer.chunks.removeValue(worldChunk, true);
 
-			if(worldChunk.staticMeshBatch != null) {
-				for (int i = 0; i < worldChunk.staticMeshBatch.size; i++) {
-					Array<Mesh> meshes = worldChunk.staticMeshBatch.getValueAt(i);
-					GlRenderer.staticMeshPool.freeMeshes(meshes);
-				}
-				worldChunk.staticMeshBatch.clear();
-			}
+			// hand every mesh this chunk is holding back to the renderer's pools
+			worldChunk.clear();
 		}
 	}
 

@@ -293,6 +293,8 @@ public class  OverworldLevel extends Level {
 			}
 		}
 		for(WorldChunk c : rendererChunksToRemove) {
+			// free the meshes this chunk is holding before it goes out of the renderer
+			c.clear();
 			GameManager.renderer.chunks.removeValue(c, true);
 		}
 	}
@@ -348,13 +350,8 @@ public class  OverworldLevel extends Level {
 	public void makeNewChunk(final int x, final int y, final OverworldChunk c) {
 		Gdx.app.log("DelverOutdoors", "Creating new Chunk");
 
-		Player p = Game.instance.player;
-		if(c.entityIsInChunk(p) || firstLoad) {
-			c.generateOnThisThread(this);
-		}
-		else {
-			c.generateOnThread(this);
-		}
+		// Generation loads .obj model meshes (GL), so it stays on the main thread.
+		c.generateOnThisThread(this);
 	}
 
 	public void madeNewChunkAt(int x, int y) {
