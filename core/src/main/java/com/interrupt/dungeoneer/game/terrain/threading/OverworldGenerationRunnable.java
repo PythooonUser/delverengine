@@ -2,10 +2,14 @@ package com.interrupt.dungeoneer.game.terrain.threading;
 
 import com.badlogic.gdx.Gdx;
 import com.interrupt.dungeoneer.GameManager;
+import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.dungeoneer.game.OverworldChunk;
 import com.interrupt.dungeoneer.game.OverworldLevel;
 
-public class OverworldGenerationThread implements Runnable {
+// Runs on the main thread: generation loads .obj model meshes through the shared ObjLoader (GL),
+// so it can't run on a worker. This class sequences the generation passes and the post-generation
+// publish.
+public class OverworldGenerationRunnable implements Runnable {
     private OverworldLevel level = null;
     private OverworldChunk chunk = null;
 
@@ -17,17 +21,21 @@ public class OverworldGenerationThread implements Runnable {
             level.updateStaticSpatialHash();
             level.updateLightSpatialHash();
 
-            // generation runs on the main thread (entity model loading is GL-bound,
-            // issue #2), so tessellate on this thread; the mesh build is posted to
-            // the render thread inside TesselationThreadRunnable.
-            chunk.TesselateOnThisThread(level, GameManager.renderer);
+            // Tesselation is CPU work once every repeating atlas is preloaded on the render
+            // thread, so offload the chunks the player isn't in.
+            if(Game.instance.player == null || chunk.entityIsInChunk(Game.instance.player)) {
+                chunk.TesselateOnThisThread(level, GameManager.renderer);
+            }
+            else {
+                chunk.TesselateOnThread(level, GameManager.renderer);
+            }
 
             // FIXME: Do we still need this?
             GameManager.renderer.UpdateDirtyWorldChunks(level);
         }
     };
 
-    public OverworldGenerationThread() { }
+    public OverworldGenerationRunnable() { }
 
     public void init(OverworldChunk chunk, OverworldLevel level) {
         this.chunk = chunk;

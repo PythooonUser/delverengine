@@ -276,6 +276,12 @@ public class GlRenderer {
 			TextureAtlas.cacheRepeatingAtlas(atlas, atlas.name);
 		}
 
+		// Preload every repeating atlas here on the render thread: loading one creates a Texture
+		// (GL), and worker tesselations ask for atlases by index.
+		for(TextureAtlas atlas : TextureAtlas.getAllRepeatingAtlases()) {
+			atlas.loadIfNeeded();
+		}
+
 		// cache some basic atlases
 		wallTextures = TextureAtlas.getCachedRegion(ArtType.texture.toString());
 		spriteTextures = TextureAtlas.getCachedRegion(ArtType.sprite.toString());
