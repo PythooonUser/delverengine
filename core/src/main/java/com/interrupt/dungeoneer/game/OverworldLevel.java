@@ -39,8 +39,6 @@ public class  OverworldLevel extends Level {
 	// pool overworld chunks!
 	private Array<OverworldChunk> freeChunks = new Array<OverworldChunk>();
 
-	private transient boolean firstLoad = true;
-
 	public OverworldLevel()
 	{
 		fogStart = 35;
@@ -293,6 +291,8 @@ public class  OverworldLevel extends Level {
 			}
 		}
 		for(WorldChunk c : rendererChunksToRemove) {
+			// free the meshes this chunk is holding before it leaves the renderer
+			c.clear();
 			GameManager.renderer.chunks.removeValue(c, true);
 		}
 	}
@@ -306,17 +306,21 @@ public class  OverworldLevel extends Level {
 				OverworldChunk c = GetChunk(x, y);
 
 				if (c == null) {
-					if(firstLoad || (madeCount < 1 && Game.rand.nextFloat() > 0.9f)) {
-						if (freeChunks.size > 0) {
-							c = freeChunks.pop();
-							if (c != null) {
-								c.reset();
-							}
-						} else {
-							c = new OverworldChunk(chunkWidth, chunkWidth);
+					// Generation runs on the main thread, so don't build all the chunks in the
+					// view distance box in one tick: the chunk the player is in has to exist
+					// before the first tick, the rest stream in at about one chunk per tick.
+					boolean playerChunk = (x == xChunk && y == yChunk);
+					if(!playerChunk && (madeCount >= 1 || Game.rand.nextFloat() <= 0.9f)) continue;
+
+					if (freeChunks.size > 0) {
+						c = freeChunks.pop();
+						if (c != null) {
+							c.reset();
 						}
-						madeCount++;
+					} else {
+						c = new OverworldChunk(chunkWidth, chunkWidth);
 					}
+					madeCount++;
 				}
 
 				if (c != null && c.needsInitializing) {
@@ -326,8 +330,6 @@ public class  OverworldLevel extends Level {
 				}
 			}
 		}
-
-		firstLoad = false;
 	}
 
 	Array<OverworldChunk> overworldChunksToRemove = new Array<OverworldChunk>();
@@ -348,13 +350,10 @@ public class  OverworldLevel extends Level {
 	public void makeNewChunk(final int x, final int y, final OverworldChunk c) {
 		Gdx.app.log("DelverOutdoors", "Creating new Chunk");
 
-		Player p = Game.instance.player;
-		if(c.entityIsInChunk(p) || firstLoad) {
-			c.generateOnThisThread(this);
-		}
-		else {
-			c.generateOnThread(this);
-		}
+		// Generation loads .obj model meshes and textures for the entities it spawns (GL), so it
+		// stays on the main thread. Tesselation for chunks the player isn't in is offloaded inside
+		// the runnable, see OverworldGenerationRunnable.
+		c.generateOnThisThread(this);
 	}
 
 	public void madeNewChunkAt(int x, int y) {

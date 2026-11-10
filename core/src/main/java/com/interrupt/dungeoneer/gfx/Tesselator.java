@@ -275,7 +275,10 @@ public class Tesselator {
 	private FloatTuple t_tuple2 = new FloatTuple(0, 0);
 
 	// where all the magic happens
-	public void Tesselate(Level level, GlRenderer renderer, WorldChunk chunk, int xOffset, int yOffset, int width, int height, TesselatorGroups tesselators, boolean makeFloors, boolean makeCeilings, boolean makeWalls, boolean showLights)
+	// build is false when the pass runs on a worker thread: Meshes take VBOs from the mesh pool,
+	// which needs the GL context, so the caller builds on the render thread, see
+	// WorldChunk.publishTesselation
+	public void Tesselate(Level level, GlRenderer renderer, WorldChunk chunk, int xOffset, int yOffset, int width, int height, TesselatorGroups tesselators, boolean makeFloors, boolean makeCeilings, boolean makeWalls, boolean showLights, boolean build)
 	{
         tesselators.clear();
 
@@ -821,7 +824,7 @@ public class Tesselator {
 			}
 		}
 
-        tesselators.build();
+		if(build) tesselators.build();
 	}
 
     private boolean shouldAddEdge(Tile current, Tile adjacent, WaterEdges edge) {

@@ -2,13 +2,16 @@ package com.interrupt.dungeoneer.game.terrain.threading;
 
 import com.badlogic.gdx.Gdx;
 import com.interrupt.dungeoneer.GameManager;
+import com.interrupt.dungeoneer.game.Game;
 import com.interrupt.dungeoneer.game.OverworldChunk;
 import com.interrupt.dungeoneer.game.OverworldLevel;
 
-public class OverworldGenerationThread implements Runnable {
+// Runs on the main thread, not on a worker: generation spawns entities, and their drawables load
+// .obj model meshes through the shared ObjLoader and textures through Art, both of which create GL
+// resources. Tesselating the chunk the player isn't in is offloaded, see TesselationThreadRunnable.
+public class OverworldGenerationRunnable implements Runnable {
     private OverworldLevel level = null;
     private OverworldChunk chunk = null;
-    private boolean tesselateOnThread = true;
 
     Runnable afterRunnable = new Runnable() {
         @Override
@@ -18,22 +21,24 @@ public class OverworldGenerationThread implements Runnable {
             level.updateStaticSpatialHash();
             level.updateLightSpatialHash();
 
-            if(tesselateOnThread)
-                chunk.TesselateOnThread(level, GameManager.renderer);
-            else
+            // Tesselation is CPU work once every repeating atlas is preloaded on the render thread
+            // (see GlRenderer.initTextures), so chunks the player isn't in go to a worker. The
+            // chunk the player is in is tesselated here, so it's built before the next tick.
+            if(Game.instance == null || Game.instance.player == null || chunk.entityIsInChunk(Game.instance.player))
                 chunk.TesselateOnThisThread(level, GameManager.renderer);
+            else
+                chunk.TesselateOnThread(level, GameManager.renderer);
 
             // FIXME: Do we still need this?
             GameManager.renderer.UpdateDirtyWorldChunks(level);
         }
     };
 
-    public OverworldGenerationThread() { }
+    public OverworldGenerationRunnable() { }
 
-    public void init(OverworldChunk chunk, OverworldLevel level, boolean tesselateOnThread) {
+    public void init(OverworldChunk chunk, OverworldLevel level) {
         this.chunk = chunk;
         this.level = level;
-        this.tesselateOnThread = tesselateOnThread;
     }
 
     @Override

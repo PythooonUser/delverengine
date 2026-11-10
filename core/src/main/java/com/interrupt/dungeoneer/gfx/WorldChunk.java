@@ -150,11 +150,25 @@ public class WorldChunk {
 
 	public void Tesselate(Level level, GlRenderer renderer)
 	{
-		tesselator.Tesselate(level, renderer, this, xOffset, yOffset, width, height, tesselators, makeFloors, makeCeilings, makeWalls, true);
+		tesselator.Tesselate(level, renderer, this, xOffset, yOffset, width, height, tesselators, makeFloors, makeCeilings, makeWalls, true, true);
 		needsRetessellation = false;
 
 		if(hasBuilt) return;
-		hasBuilt = true;
+
+		publishTesselation(renderer, level, tesselators, true);
+	}
+
+	// Publishes the vertices a Tesselator pass wrote into groups. Taking meshes from the mesh
+	// pool, merging static meshes and loading texture atlases all need the GL context, so this
+	// only runs on the render thread - chunks tesselated on a worker post their groups here with
+	// Gdx.app.postRunnable. meshesBuilt says whether the pass already took meshes from the pool.
+	public void publishTesselation(GlRenderer renderer, Level level, TesselatorGroups groups, boolean meshesBuilt)
+	{
+		// hand the meshes the outgoing pass is holding back to the pools, before new ones are taken
+		if(tesselators != null && tesselators != groups) tesselators.clear();
+		freeStaticMeshes();
+
+		if(!meshesBuilt) groups.build();
 
 		// world chunks own static entities in their bounds
 		entities.clear();
@@ -177,7 +191,7 @@ public class WorldChunk {
 
 		if(level instanceof OverworldLevel) {
 			for(OverworldChunk chunk : ((OverworldLevel)level).chunks.values()) {
-				if(chunk.xChunk * 17 == xOffset && chunk.yChunk * 17 == yOffset) {
+				if(chunk.xChunk * chunk.width == xOffset && chunk.yChunk * chunk.height == yOffset) {
 					entities.addAll(chunk.static_entities);
 				}
 			}
@@ -197,36 +211,38 @@ public class WorldChunk {
 			}
 		}
 
-		bounds.clr();
-		bounds.min.x = xOffset;
-		bounds.max.x = xOffset + width;
+		BoundingBox newBounds = new BoundingBox();
+		newBounds.clr();
+		newBounds.min.x = xOffset;
+		newBounds.max.x = xOffset + width;
 
-		bounds.min.z = yOffset;
-		bounds.max.z = yOffset + width;
+		newBounds.min.z = yOffset;
+		newBounds.max.z = yOffset + height;
 
 		// set drawing bounds
 		Array<BoundingBox> calcedBounds = new Array<BoundingBox>();
 
-        calcedBounds.add(tesselators.world.calculateBoundingBox());
-		calcedBounds.add(tesselators.water.calculateBoundingBox());
-		calcedBounds.add(tesselators.waterfall.calculateBoundingBox());
+		calcedBounds.add(groups.world.calculateBoundingBox());
+		calcedBounds.add(groups.water.calculateBoundingBox());
+		calcedBounds.add(groups.waterfall.calculateBoundingBox());
 
 		// make a static mesh from each entity bucket
+		// mergeStaticMeshes wants a collision triangle list, chunks don't use it
 		List<Vector3> tempCollisionTriangles = new ArrayList<Vector3>();
-		staticMeshBatch = new ArrayMap<String, Array<Mesh>>();
+		ArrayMap<String, Array<Mesh>> newStaticMeshBatch = new ArrayMap<String, Array<Mesh>>();
 		for(String key : meshesByTexture.keySet()) {
 			Array<Mesh> m = GlRenderer.mergeStaticMeshes(level, meshesByTexture.get(key), tempCollisionTriangles);
 			if(m != null) {
-				staticMeshBatch.put(key, m);
+				newStaticMeshBatch.put(key, m);
 
 				for(Mesh mesh : m) {
 					BoundingBox meshBounds = mesh.calculateBoundingBox();
-					bounds.min.x = Math.min(bounds.min.x, meshBounds.min.x);
-					bounds.min.y = Math.min(bounds.min.y, meshBounds.min.y);
-					bounds.min.z = Math.min(bounds.min.z, meshBounds.min.z);
-					bounds.max.x = Math.max(bounds.max.x, meshBounds.max.x);
-					bounds.max.y = Math.max(bounds.max.y, meshBounds.max.y);
-					bounds.max.z = Math.max(bounds.max.z, meshBounds.max.z);
+					newBounds.min.x = Math.min(newBounds.min.x, meshBounds.min.x);
+					newBounds.min.y = Math.min(newBounds.min.y, meshBounds.min.y);
+					newBounds.min.z = Math.min(newBounds.min.z, meshBounds.min.z);
+					newBounds.max.x = Math.max(newBounds.max.x, meshBounds.max.x);
+					newBounds.max.y = Math.max(newBounds.max.y, meshBounds.max.y);
+					newBounds.max.z = Math.max(newBounds.max.z, meshBounds.max.z);
 				}
 			}
 		}
@@ -237,10 +253,16 @@ public class WorldChunk {
 		for(BoundingBox b : calcedBounds)
 		{
 			if(b != null) {
-				bounds.min.y = Math.min(bounds.min.y, b.min.y);
-				bounds.max.y = Math.max(bounds.max.y, b.max.y);
+				newBounds.min.y = Math.min(newBounds.min.y, b.min.y);
+				newBounds.max.y = Math.max(newBounds.max.y, b.max.y);
 			}
 		}
+
+		// publish. The chunk is drawn from these groups from now on.
+		tesselators = groups;
+		bounds = newBounds;
+		staticMeshBatch = newStaticMeshBatch;
+		hasBuilt = true;
 
 		GameScreen.resetDelta = true;
 		position.set(xOffset + (width / 2f), 0, yOffset + (height / 2f));
